@@ -123,9 +123,10 @@ func (m *rbiModule) willGenerateInvalidRuby(fields []pgs.Field) bool {
 }
 
 func main() {
+	supportOptionalKeyward := (uint64)(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 	pgs.Init(
 		pgs.DebugEnv("DEBUG"),
-		pgs.SupportedFeatures((uint64)(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)),
+		pgs.SupportedFeatures(&supportOptionalKeyward),
 	).RegisterModule(
 		RBI(),
 	).RegisterPostProcessor(
