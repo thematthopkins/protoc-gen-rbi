@@ -169,7 +169,7 @@ class {{ rubyMessageType . }}{{ if useAbstractMessage }} < ::Google::Protobuf::A
     ).void
   end
   def initialize({{ $index := 0 }}{{ range .Fields }}{{ if gt $index 0 }},{{ end }}{{ $index = increment $index }}
-    {{ .Name }}: {{ rubyFieldValue . }}{{ end }}
+    {{ .Name }}{{ end }}
   )
   end
 {{ else }}
