@@ -2,7 +2,6 @@ package ruby_types
 
 import (
 	"fmt"
-	"github.com/thematthopkins/elm-protobuf/pkg/elm"
 	"log"
 	"strings"
 
@@ -139,10 +138,12 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 		return "Float"
 	}
 	if pt == pgs.StringT || pt == pgs.BytesT {
-		idType := elm.GetIdType(field.Message().Descriptor().Name, field.Descriptor())
-		if idType != nil {
-			return strings.TrimPrefix(*((*string)(idType)), "Ids.") + "Id"
-		}
+		/*
+			idType := elm.GetIdType(field.Message().Descriptor().Name, field.Descriptor())
+			if idType != nil {
+				return strings.TrimPrefix(*((*string)(idType)), "Ids.") + "Id"
+			}
+		*/
 		return "String"
 	}
 	if pt == pgs.BoolT {
