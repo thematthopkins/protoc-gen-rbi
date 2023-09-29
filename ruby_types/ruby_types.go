@@ -2,6 +2,8 @@ package ruby_types
 
 import (
 	"fmt"
+	"github.com/thematthopkins/elm-protobuf/pkg/elm"
+	"google.golang.org/protobuf/proto"
 	"log"
 	"strings"
 
@@ -81,7 +83,12 @@ func rubyFieldType(field pgs.Field, mt methodType) string {
 
 	// initializer fields can be passed a `nil` value for all field types
 	// messages are already wrapped so we skip those
-	if mt == methodTypeInitializer && (t.IsMap() || t.IsRepeated() || t.ProtoType() != pgs.MessageT) {
+	// if mt == methodTypeInitializer && (t.IsMap() || t.IsRepeated() || t.ProtoType() != pgs.MessageT) {
+	//	return fmt.Sprintf("T.nilable(%s)", rubyType)
+	//}
+
+	// override the default behavior to be stricter, since we don't have old messages laying around
+	if t.IsOptional() {
 		return fmt.Sprintf("T.nilable(%s)", rubyType)
 	}
 
@@ -133,6 +140,10 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 		return "Float"
 	}
 	if pt == pgs.StringT || pt == pgs.BytesT {
+		idType := elm.GetIdType(nil, field.Descriptor())
+		if idType != nil {
+			return strings.TrimPrefix(idType, "Ids.") + "Id"
+		}
 		return "String"
 	}
 	if pt == pgs.BoolT {
