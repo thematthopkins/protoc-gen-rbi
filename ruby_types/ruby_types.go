@@ -3,7 +3,6 @@ package ruby_types
 import (
 	"fmt"
 	"github.com/thematthopkins/elm-protobuf/pkg/elm"
-	"google.golang.org/protobuf/proto"
 	"log"
 	"strings"
 
@@ -140,9 +139,9 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 		return "Float"
 	}
 	if pt == pgs.StringT || pt == pgs.BytesT {
-		idType := elm.GetIdType(nil, field.Descriptor())
+		idType := elm.GetIdType(field.Message().Descriptor().Name, field.Descriptor())
 		if idType != nil {
-			return strings.TrimPrefix(idType, "Ids.") + "Id"
+			return strings.TrimPrefix((string)(idType), "Ids.") + "Id"
 		}
 		return "String"
 	}
