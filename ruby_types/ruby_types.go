@@ -86,7 +86,8 @@ func rubyFieldType(field pgs.Field, mt methodType) string {
 	//}
 
 	// override the default behavior to be stricter, since we don't have old messages laying around
-	if t.IsOptional() {
+
+	if field.Descriptor().GetProto3Optional() {
 		return fmt.Sprintf("T.nilable(%s)", rubyType)
 	}
 
@@ -156,7 +157,11 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 		return "T.any(Symbol, String, Integer)"
 	}
 	if pt == pgs.MessageT {
-		return fmt.Sprintf("T.nilable(%s)", RubyMessageType(ft.Embed()))
+		inner := RubyMessageType(ft.Embed())
+		if field.Descriptor().GetProto3Optional() {
+			return fmt.Sprintf("T.nilable(%s)", inner)
+		}
+		return inner
 	}
 	log.Panicf("Unsupported field type for field: %v\n", field.Name().String())
 	return ""
