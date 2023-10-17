@@ -87,7 +87,7 @@ func rubyFieldType(field pgs.Field, mt methodType) string {
 
 	// override the default behavior to be stricter, since we don't have old messages laying around
 
-	if field.Descriptor().GetProto3Optional() {
+	if field.Descriptor().GetProto3Optional() || field.InOneOf() {
 		return fmt.Sprintf("T.nilable(%s)", rubyType)
 	}
 

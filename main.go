@@ -112,7 +112,7 @@ func (m *rbiModule) generateServices(f pgs.File) {
 }
 
 func (m *rbiModule) generateHttpServices(f pgs.File) {
-	op := "lib/" + strings.TrimSuffix(f.InputPath().String(), ".proto") + "_services_pb.rb"
+	op := "lib/" + strings.TrimSuffix(f.InputPath().String(), ".proto") + "_pb_service.rb"
 	m.AddGeneratorTemplateFile(op, m.httpServiceTpl, f)
 }
 
@@ -286,7 +286,7 @@ module {{ rubyPackage .File }}Service
   sig do
     params(mapper: ActionDispatch::Routing::Mapper).void
   end
-  def add_routes(mapper)
+  def self.add_routes(mapper)
 {{ range $Service := .Services }}    # {{.Name}} routes{{ range .Methods }}
     mapper.post "/{{$Service.Name.LowerSnakeCase}}/{{.Name.LowerSnakeCase}}", to: "{{$Service.Name.LowerSnakeCase}}#{{.Name.LowerSnakeCase}}_stub"{{ end }}
 
@@ -298,6 +298,17 @@ module {{ rubyPackage .File }}Service
     extend T::Sig
 
     abstract!
+
+    # rails routing doesn't like to route to super classes
+    # automatically define our stubs in the sub classes, so it can 
+    # find them
+    sig do
+      params(subclass: T::Class[T.untyped]).void
+    end
+    def self.inherited(subclass)
+{{ range .Methods }}      subclass.define_method("{{ .Name.LowerSnakeCase }}_stub") do super() end
+{{ end }}
+    end
 
 {{ range .Methods }}
     sig { void }
