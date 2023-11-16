@@ -58,6 +58,25 @@ func RubyGetterFieldType(field pgs.Field) string {
 	return rubyFieldType(field, methodTypeGetter)
 }
 
+func FieldEncoder(field string, fieldType pgs.FieldType) string {
+	if fieldType.IsEmbed() || fieldType.IsEnum() {
+		return fmt.Sprintf("%s&.serialize", field)
+	} else {
+		return field
+	}
+}
+
+func FieldDecoder(key string, fieldType pgs.FieldType) string {
+	key = fmt.Sprintf("hash[\"%s\"]", key)
+	if fieldType.IsEmbed() {
+		return fmt.Sprintf("%s && %s.from_hash(%s)", key, RubyMessageType(fieldType.Embed()), key)
+	} else if fieldType.IsEnum() {
+		return fmt.Sprintf("%s && %s.deserialize(%s)", key, RubyMessageType(fieldType.Enum()), key)
+	} else {
+		return key
+	}
+}
+
 func RubySetterFieldType(field pgs.Field) string {
 	return rubyFieldType(field, methodTypeSetter)
 }
@@ -151,10 +170,7 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 		return "T::Boolean"
 	}
 	if pt == pgs.EnumT {
-		if mt == methodTypeGetter {
-			return "Symbol"
-		}
-		return "T.any(Symbol, String, Integer)"
+		return RubyMessageType(ft.Enum())
 	}
 	if pt == pgs.MessageT {
 		inner := RubyMessageType(ft.Embed())
@@ -236,6 +252,12 @@ func RubyMethodParamType(method pgs.Method) string {
 
 func RubyMethodReturnType(method pgs.Method) string {
 	return rubyMethodType(method.Output(), method.ServerStreaming())
+}
+
+func ShortEnumValName(enumVal pgs.EnumValue) string {
+	lower_enum := enumVal.Enum().Name().String()
+	lower_val := ((pgs.Name)(strings.ToLower(enumVal.Name().String()))).UpperCamelCase().String()
+	return strings.TrimPrefix(lower_val, lower_enum)
 }
 
 func rubyMethodType(message pgs.Message, streaming bool) string {
