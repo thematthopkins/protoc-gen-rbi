@@ -181,8 +181,12 @@ class {{ rubyMessageType . }} < T::Enum
 end
 {{ end }}
 
+# T::Structs require forward declarations of reference classes
+# dynamically declaring them like this hides the duplicate 
+# declaration from sorbet, and keeps ruby happy about 
+# classes existing before they're referenced
 {{ range .AllMessages }}
-class {{ rubyMessageType . }} < T::Struct; end
+{{ rubyMessageType . }} = Class.new(T::Struct)
 {{ end }}
 
 {{ range .AllMessages }}
@@ -224,16 +228,16 @@ class {{ rubyMessageType . }} < T::Struct
     def serialize(_strict = true)
         case self
         {{ range .Fields }}when {{ .Name.UpperCamelCase }}
-            { "{{ .Name.LowerCamelCase }}": {{ fieldEncoder "value" (.Type) }}
+            { "{{ .Name.LowerCamelCase }}": {{ fieldEncoder "value" (.Type) }} }
         {{ end }}  else
             T.absurd(self)
         end
     end
 
-    sig { params(hash: T::Hash[String, T.untyped]).returns(T.self_type) }
+    sig { params(hash: T::Hash[String, T.untyped]).returns({{ .Name }}) }
     def self.from_hash(hash)
       {{ range .Fields }}if hash["{{ .Name.LowerCamelCase }}"] then
-        return {{ fieldDecoder (.Name.LowerCamelCase.String) .Type }}
+        return {{ .Name.UpperCamelCase }}.new({{ fieldDecoder (.Name.LowerCamelCase.String) .Type }})
       end
       {{ end }}
       raise "Expected one of, but none were set"
@@ -254,6 +258,7 @@ class {{ rubyMessageType . }} < T::Struct
         value.to_s
       end
 
+      sig { params(other: T.untyped).returns(T::Boolean) }
       def ==(other)
         self.class == other.class &&
           @value == other.value
@@ -279,13 +284,13 @@ class {{ rubyMessageType . }} < T::Struct
     {{ end }}{{ end }}s
   end
 
-  sig { params(contents: String).returns(T.self_type) }
+  sig { params(contents: String).returns({{ rubyMessageType . }}) }
   def self.decode_json(contents)
     json_obj = JSON.parse(contents)
     from_hash(json_obj)
   end
 
-  sig { params(hash: T::Hash[String, T.untyped]).returns(T.self_type) }
+  sig { params(hash: T::Hash[String, T.untyped]).returns({{ rubyMessageType . }}) }
   def self.from_hash(hash)
     new({{ range .Fields }}{{ if not (.InRealOneOf) }}
       {{ .Name }}: {{ fieldDecoder (.Name.LowerCamelCase.String) .Type }},{{end}}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}

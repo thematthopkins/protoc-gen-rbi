@@ -58,23 +58,74 @@ func RubyGetterFieldType(field pgs.Field) string {
 	return rubyFieldType(field, methodTypeGetter)
 }
 
+func isStringEncodedInt(fieldType pgs.ProtoType) bool {
+	return fieldType == pgs.Int64T ||
+		fieldType == pgs.UInt64T ||
+		fieldType == pgs.SInt64 ||
+		fieldType == pgs.Fixed64T ||
+		fieldType == pgs.SFixed64
+}
+
 func FieldEncoder(field string, fieldType pgs.FieldType) string {
-	if fieldType.IsEmbed() || fieldType.IsEnum() {
-		return fmt.Sprintf("%s&.serialize", field)
+	operation := ""
+	if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
+		operation = "serialize"
+	} else if fieldType.IsEnum() || (fieldType.IsRepeated() && fieldType.Element().IsEnum()) {
+		operation = "serialize"
+	} else if isStringEncodedInt(fieldType.ProtoType()) || (fieldType.IsRepeated() && isStringEncodedInt(fieldType.Element().ProtoType())) {
+		operation = "to_s"
 	} else {
 		return field
+	}
+
+	nullHandler := ""
+	if fieldType.Field().Descriptor().GetProto3Optional() {
+		nullHandler = "&"
+	}
+
+	if fieldType.IsRepeated() {
+		return fmt.Sprintf("%s%s.map(&:%s)", field, nullHandler, operation)
+	} else {
+		return fmt.Sprintf("%s%s.%s", field, nullHandler, operation)
 	}
 }
 
 func FieldDecoder(key string, fieldType pgs.FieldType) string {
 	key = fmt.Sprintf("hash[\"%s\"]", key)
-	if fieldType.IsEmbed() {
-		return fmt.Sprintf("%s && %s.from_hash(%s)", key, RubyMessageType(fieldType.Embed()), key)
-	} else if fieldType.IsEnum() {
-		return fmt.Sprintf("%s && %s.deserialize(%s)", key, RubyMessageType(fieldType.Enum()), key)
+	operation := ""
+	if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
+		typeName := ""
+		if fieldType.IsRepeated() {
+			typeName = RubyMessageType(fieldType.Element().Embed())
+		} else {
+			typeName = RubyMessageType(fieldType.Embed())
+		}
+		operation = typeName + ".from_hash"
+	} else if fieldType.IsEnum() || (fieldType.IsRepeated() && fieldType.Element().IsEnum()) {
+		typeName := ""
+		if fieldType.IsRepeated() {
+			typeName = RubyMessageType(fieldType.Element().Enum())
+		} else {
+			typeName = RubyMessageType(fieldType.Enum())
+		}
+		operation = typeName + ".deserialize"
+	} else if isStringEncodedInt(fieldType.ProtoType()) || (fieldType.IsRepeated() && isStringEncodedInt(fieldType.Element().ProtoType())) {
+		operation = "Integer"
 	} else {
 		return key
 	}
+
+	extractor := ""
+	if fieldType.IsRepeated() {
+		extractor = fmt.Sprintf("%s.map{%s(_1)}", key, operation)
+	} else {
+		extractor = fmt.Sprintf("%s(%s)", operation, key)
+	}
+
+	if fieldType.Field().Descriptor().GetProto3Optional() {
+		return fmt.Sprintf("%s.nil? ? nil : %s", key, extractor)
+	}
+	return extractor
 }
 
 func RubySetterFieldType(field pgs.Field) string {
