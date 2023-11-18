@@ -185,10 +185,8 @@ end
 # dynamically declaring them like this hides the duplicate 
 # declaration from sorbet, and keeps ruby happy about 
 # classes existing before they're referenced
-{{ range .AllMessages }}
-{{ rubyMessageType . }} = Class.new(T::Struct)
+{{ range .AllMessages }}{{ rubyMessageType . }} = Class.new(T::Struct)
 {{ end }}
-
 {{ range .AllMessages }}
 {{ range .Enums }}
 class {{ rubyMessageType . }} < T::Enum
@@ -213,9 +211,14 @@ end
 {{ end }}
 class {{ rubyMessageType . }} < T::Struct
   extend T::Sig
-  extend T::Helpers
   include T::Props::Serializable
   include T::Struct::ActsAsComparable
+
+{{ range .Fields }}{{ if not (.InRealOneOf) }}
+  const :{{ .Name }}, {{ rubyGetterFieldType . }}{{ end }}{{ end }}
+
+  {{ range .OneOfs }}{{ if not (optionalOneOf .) }}const :{{ .Name.LowerSnakeCase }}, {{ .Name }}
+{{ end }}{{ end }}
 
 {{ range .OneOfs }}{{ if not (optionalOneOf .) }}
   module {{ .Name }}{{ $oneOfName := .Name}}
@@ -297,12 +300,6 @@ class {{ rubyMessageType . }} < T::Struct
       {{ .Name.LowerCamelCase }}: {{ .Name }}.from_hash(hash){{ end }}{{ end }}
     )
   end
-{{ range .Fields }}{{ if not (.InRealOneOf) }}
-  const :{{ .Name }}, {{ rubyGetterFieldType . }}{{ end }}{{ end }}
-
-  {{ range .OneOfs }}{{ if not (optionalOneOf .) }}const :{{ .Name.LowerSnakeCase }}, {{ .Name }}
-{{ end }}{{ end }}
-
 end
 {{ end }}
 `
