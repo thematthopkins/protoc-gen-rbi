@@ -8,6 +8,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/lyft/protoc-gen-star v0.6.2
 	github.com/spf13/afero v1.10.0 // indirect
+	github.com/thematthopkins/elm-protobuf v0.0.5-0.20231113223330-da6832d05883
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/tools v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0

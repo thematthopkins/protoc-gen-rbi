@@ -8,8 +8,8 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/coinbase/protoc-gen-rbi/pkg/forwardextensions"
 	"github.com/coinbase/protoc-gen-rbi/ruby_types"
+	"github.com/thematthopkins/elm-protobuf/pkg/forwardextensions"
 
 	pgs "github.com/lyft/protoc-gen-star"
 	pgsgo "github.com/lyft/protoc-gen-star/lang/go"

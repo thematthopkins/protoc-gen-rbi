@@ -2,6 +2,8 @@ package ruby_types
 
 import (
 	"fmt"
+	"github.com/golang/protobuf/protoc-gen-go/descriptor"
+	"github.com/thematthopkins/elm-protobuf/pkg/elm"
 	"log"
 	"strings"
 
@@ -68,7 +70,9 @@ func isStringEncodedInt(fieldType pgs.ProtoType) bool {
 
 func FieldEncoder(field string, fieldType pgs.FieldType) string {
 	operation := ""
-	if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
+	if isIdType(fieldType.Field().Descriptor()) {
+		operation = "value"
+	} else if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
 		operation = "serialize"
 	} else if fieldType.IsEnum() || (fieldType.IsRepeated() && fieldType.Element().IsEnum()) {
 		operation = "serialize"
@@ -93,7 +97,9 @@ func FieldEncoder(field string, fieldType pgs.FieldType) string {
 func FieldDecoder(key string, fieldType pgs.FieldType) string {
 	key = fmt.Sprintf("hash[\"%s\"]", key)
 	operation := ""
-	if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
+	if isIdType(fieldType.Field().Descriptor()) {
+		operation = *idTypeName(fieldType) + ".new"
+	} else if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
 		typeName := ""
 		if fieldType.IsRepeated() {
 			typeName = RubyMessageType(fieldType.Element().Embed())
@@ -136,6 +142,30 @@ func RubyInitializerFieldType(field pgs.Field) string {
 	return rubyFieldType(field, methodTypeInitializer)
 }
 
+func maybeNillable(descriptorProto *descriptor.FieldDescriptorProto, rubyType string) string {
+	if descriptorProto.GetProto3Optional() {
+		return fmt.Sprintf("T.nilable(%s)", rubyType)
+	}
+	return rubyType
+}
+
+func isIdType(fieldDescriptor *descriptor.FieldDescriptorProto) bool {
+	parentName := "placeholder"
+	idType := elm.GetIdType(&parentName, fieldDescriptor)
+	return idType != nil
+}
+
+func idTypeName(field pgs.FieldType) *string {
+	parentName := field.Field().Message().Name().String()
+	idType := elm.GetIdType(&parentName, field.Field().Descriptor())
+	if idType != nil {
+		typeName := strings.TrimPrefix(((string)(*idType)), "Ids.")
+		val := typeName + "Id"
+		return &val
+	}
+	return nil
+}
+
 func rubyFieldType(field pgs.Field, mt methodType) string {
 	var rubyType string
 
@@ -146,7 +176,12 @@ func rubyFieldType(field pgs.Field, mt methodType) string {
 	} else if t.IsRepeated() {
 		rubyType = rubyFieldRepeatedType(field, t, mt)
 	} else {
-		rubyType = rubyProtoTypeElem(field, t, mt)
+		idType := idTypeName(t)
+		if idType != nil {
+			rubyType = *idType
+		} else {
+			rubyType = rubyProtoTypeElem(field, t, mt)
+		}
 	}
 
 	// initializer fields can be passed a `nil` value for all field types
@@ -157,11 +192,7 @@ func rubyFieldType(field pgs.Field, mt methodType) string {
 
 	// override the default behavior to be stricter, since we don't have old messages laying around
 
-	if field.Descriptor().GetProto3Optional() {
-		return fmt.Sprintf("T.nilable(%s)", rubyType)
-	}
-
-	return rubyType
+	return maybeNillable(field.Descriptor(), rubyType)
 }
 
 func rubyFieldMapType(field pgs.Field, ft pgs.FieldType, mt methodType) string {
@@ -202,6 +233,11 @@ func RubyFieldValue(field pgs.Field) string {
 
 func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 	pt := ft.ProtoType()
+	idType := idTypeName(field.Type())
+	if idType != nil {
+		return *idType
+	}
+
 	if pt.IsInt() {
 		return "Integer"
 	}
