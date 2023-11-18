@@ -213,14 +213,12 @@ class {{ rubyMessageType . }} < T::Struct
   extend T::Sig
   include T::Props::Serializable
   include T::Struct::ActsAsComparable
-
 {{ range .Fields }}{{ if not (.InRealOneOf) }}
-  const :{{ .Name }}, {{ rubyGetterFieldType . }}{{ end }}{{ end }}
-
-  {{ range .OneOfs }}{{ if not (optionalOneOf .) }}const :{{ .Name.LowerSnakeCase }}, {{ .Name }}
-{{ end }}{{ end }}
-
-{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
+  const :{{ .Name }}, {{ rubyGetterFieldType . }}
+{{ end }}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
+  module {{.Name}}; end
+  const :{{ .Name.LowerSnakeCase }}, {{ .Name }}
+{{ end }}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
   module {{ .Name }}{{ $oneOfName := .Name}}
     extend T::Sig
     extend T::Helpers
@@ -271,8 +269,8 @@ class {{ rubyMessageType . }} < T::Struct
       attr_reader :value
     end
     {{ end }}
-  end{{ end }}{{ end }}
-
+  end
+{{ end }}{{ end }}
   sig { returns(String) }
   def encode_json
     serialize.to_json
