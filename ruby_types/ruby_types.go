@@ -72,6 +72,10 @@ func FieldEncoder(field string, fieldType pgs.FieldType) string {
 	operation := ""
 	if isIdType(fieldType.Field().Descriptor()) {
 		operation = "value"
+	} else if fieldType.IsEmbed() && RubyMessageType(fieldType.Embed()) == "Google::Protobuf::Timestamp" ||
+		fieldType.IsRepeated() && fieldType.Element().IsEmbed() && RubyMessageType(fieldType.Element().Embed()) == "Google::Protobuf::Timestamp" {
+
+		operation = "iso8601"
 	} else if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
 		operation = "serialize"
 	} else if fieldType.IsEnum() || (fieldType.IsRepeated() && fieldType.Element().IsEnum()) {
@@ -99,6 +103,10 @@ func FieldDecoder(key string, fieldType pgs.FieldType) string {
 	operation := ""
 	if isIdType(fieldType.Field().Descriptor()) {
 		operation = *idTypeName(fieldType) + ".new"
+	} else if fieldType.IsEmbed() && RubyMessageType(fieldType.Embed()) == "Google::Protobuf::Timestamp" ||
+		fieldType.IsRepeated() && fieldType.Element().IsEmbed() && RubyMessageType(fieldType.Element().Embed()) == "Google::Protobuf::Timestamp" {
+
+		operation = "Time.iso8601"
 	} else if fieldType.IsEmbed() || (fieldType.IsRepeated() && fieldType.Element().IsEmbed()) {
 		typeName := ""
 		if fieldType.IsRepeated() {
@@ -245,12 +253,6 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 		return "Float"
 	}
 	if pt == pgs.StringT || pt == pgs.BytesT {
-		/*
-			idType := elm.GetIdType(field.Message().Descriptor().Name, field.Descriptor())
-			if idType != nil {
-				return strings.TrimPrefix(*((*string)(idType)), "Ids.") + "Id"
-			}
-		*/
 		return "String"
 	}
 	if pt == pgs.BoolT {
@@ -261,8 +263,8 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 	}
 	if pt == pgs.MessageT {
 		inner := RubyMessageType(ft.Embed())
-		if field.Descriptor().GetProto3Optional() {
-			return fmt.Sprintf("T.nilable(%s)", inner)
+		if inner == "Google::Protobuf::Timestamp" {
+			inner = "Time"
 		}
 		return inner
 	}
