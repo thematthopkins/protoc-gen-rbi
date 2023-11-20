@@ -129,7 +129,7 @@ JSON
     end
 
     it "should match elm's encoding" do
-      expect(JSON.parse(filled_in_val.encode_json)).to eq(
+      expect(JSON.parse(filled_in_val.to_json)).to eq(
         JSON.parse(filled_in_json)
       )
     end
@@ -143,7 +143,7 @@ JSON
     end
 
     it "should match elm's encoding" do
-      expect(JSON.parse(default_val.encode_json)).to eq(
+      expect(JSON.parse(default_val.to_json)).to eq(
         JSON.parse(default_json_out)
       )
     end

@@ -64,7 +64,7 @@ class SimplePb::Empty < T::Struct
   include T::Struct::ActsAsComparable
 
   sig { returns(String) }
-  def encode_json
+  def to_json
     serialize.to_json
   end
 
@@ -97,7 +97,7 @@ class SimplePb::Simple < T::Struct
   const :int32_field, Integer
 
   sig { returns(String) }
-  def encode_json
+  def to_json
     serialize.to_json
   end
 
@@ -273,7 +273,7 @@ class SimplePb::Foo < T::Struct
   end
 
   sig { returns(String) }
-  def encode_json
+  def to_json
     serialize.to_json
   end
 

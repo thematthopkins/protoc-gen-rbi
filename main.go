@@ -291,7 +291,7 @@ class {{ rubyMessageType . }} < T::Struct
   end
 {{ end }}{{ end }}
   sig { returns(String) }
-  def encode_json
+  def to_json
     serialize.to_json
   end
 
@@ -395,7 +395,7 @@ module {{ rubyPackage .File }}Service
       result = {{ .Name.LowerSnakeCase }}(user, params)
 {{ else }}
       result = {{ .Name.LowerSnakeCase }}(params)
-{{ end }}      render json: result.encode_json
+{{ end }}      render json: result.to_json
     end
 
     sig do
