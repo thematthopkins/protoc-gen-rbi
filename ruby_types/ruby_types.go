@@ -49,8 +49,8 @@ func RubyMessageType(entity EntityWithParent) string {
 	outer := entity
 	ok := true
 	for ok {
-		name := outer.Name().String()
-		names = append([]string{strings.Title(name)}, names...)
+		name := outer.Name().UpperCamelCase()
+		names = append([]string{name.String()}, names...)
 		outer, ok = outer.Parent().(pgs.Message)
 	}
 	return fmt.Sprintf("%s::%s", RubyPackage(entity.File()), strings.Join(names, "::"))
@@ -99,7 +99,6 @@ func FieldEncoder(field string, fieldType pgs.FieldType) string {
 }
 
 func FieldDecoder(key string, fieldType pgs.FieldType) string {
-	key = fmt.Sprintf("hash[\"%s\"]", key)
 	operation := ""
 	if isIdType(fieldType.Field().Descriptor()) {
 		operation = *idTypeName(fieldType) + ".new"
@@ -125,8 +124,16 @@ func FieldDecoder(key string, fieldType pgs.FieldType) string {
 		operation = typeName + ".deserialize"
 	} else if isStringEncodedInt(fieldType.ProtoType()) || (fieldType.IsRepeated() && isStringEncodedInt(fieldType.Element().ProtoType())) {
 		operation = "Integer"
-	} else {
-		return key
+	}
+
+	key = fmt.Sprintf("hash[\"%s\"]", key)
+
+	isOptional := fieldType.Field().Descriptor().GetProto3Optional()
+	defaultVal := rubyProtoTypeValue(fieldType.Field(), fieldType)
+	if defaultVal != nil && !isOptional && !fieldType.IsRepeated() {
+		key = fmt.Sprintf("PbHelper::withDefault(%s, %s)", key, *defaultVal)
+	} else if fieldType.IsRepeated() {
+		key = fmt.Sprintf("PbHelper::withDefault(%s, [])", key)
 	}
 
 	extractor := ""
@@ -136,8 +143,8 @@ func FieldDecoder(key string, fieldType pgs.FieldType) string {
 		extractor = fmt.Sprintf("%s(%s)", operation, key)
 	}
 
-	if fieldType.Field().Descriptor().GetProto3Optional() {
-		return fmt.Sprintf("%s.nil? ? nil : %s", key, extractor)
+	if isOptional {
+		return fmt.Sprintf("PbHelper::mapNil(%s) { %s }", key, extractor)
 	}
 	return extractor
 }
@@ -236,7 +243,7 @@ func RubyFieldValue(field pgs.Field) string {
 	} else if t.IsRepeated() {
 		return "[]"
 	}
-	return rubyProtoTypeValue(field, t)
+	return *rubyProtoTypeValue(field, t)
 }
 
 func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
@@ -272,28 +279,38 @@ func rubyProtoTypeElem(field pgs.Field, ft FieldType, mt methodType) string {
 	return ""
 }
 
-func rubyProtoTypeValue(field pgs.Field, ft FieldType) string {
+func sPtr(s string) *string {
+	return &s
+}
+
+func rubyProtoTypeValue(field pgs.Field, ft FieldType) *string {
 	pt := ft.ProtoType()
 	if pt.IsInt() {
-		return "0"
+		return sPtr("0")
 	}
 	if pt.IsNumeric() {
-		return "0.0"
+		return sPtr("0.0")
 	}
 	if pt == pgs.StringT || pt == pgs.BytesT {
-		return "\"\""
+		return sPtr("\"\"")
 	}
 	if pt == pgs.BoolT {
-		return "false"
+		return sPtr("false")
 	}
-	if pt == pgs.EnumT {
-		return fmt.Sprintf(":%s", ft.Enum().Values()[0].Name().String())
+	if pt == pgs.EnumT && ft.Enum() != nil {
+		return sPtr(fmt.Sprintf("\"%s\"", ft.Enum().Values()[0].Name().String()))
+	}
+	if pt == pgs.MessageT && ft.IsEmbed() {
+		inner := RubyMessageType(ft.Embed())
+		if inner == "Google::Protobuf::Timestamp" {
+			return sPtr("\"1970-01-01T00:00:00Z\"")
+		}
 	}
 	if pt == pgs.MessageT {
-		return "nil"
+		return sPtr("nil")
 	}
-	log.Panicf("Unsupported field type for field: %v\n", field.Name().String())
-	return ""
+
+	return nil
 }
 
 func rubyMapType(ft FieldType) string {

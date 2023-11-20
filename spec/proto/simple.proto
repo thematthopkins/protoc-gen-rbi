@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package simple_pb;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+message Empty {
+}
+
+message Simple {
+  int32 int32_field = 1;
+}
+
+enum Colour {
+  RED = 0;
+  GREEN = 1;
+  BLUE = 2;
+}
+
+message Foo {
+  Simple s = 1;
+  repeated Simple ss = 2;
+  optional Simple optional_s = 3;
+
+  Colour colour = 4;
+  repeated Colour colours = 5;
+  optional Colour optional_colour = 6;
+
+  int32 int_field = 7;
+  repeated int32 int_fields = 8;
+  optional int32 optional_int_field = 9;
+
+  int64 int64_field = 10;
+  repeated int64 int64_fields = 11;
+  optional int64 optional_int64_field = 12;
+
+  oneof oo {
+    int32 oo1 = 13;
+    bool oo2 = 14;
+    Colour oo3 = 15;
+  }
+
+  google.protobuf.Timestamp timestamp_field = 20;
+  repeated google.protobuf.Timestamp timestamp_fields = 21;
+  optional google.protobuf.Timestamp optional_timestamp_field = 22;
+}
+

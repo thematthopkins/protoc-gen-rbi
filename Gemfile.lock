@@ -1,13 +1,37 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    diff-lcs (1.5.0)
     grpc-tools (1.54.0)
+    json (2.6.3)
+    rspec (3.12.0)
+      rspec-core (~> 3.12.0)
+      rspec-expectations (~> 3.12.0)
+      rspec-mocks (~> 3.12.0)
+    rspec-core (3.12.2)
+      rspec-support (~> 3.12.0)
+    rspec-expectations (3.12.3)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-mocks (3.12.6)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.12.0)
+    rspec-support (3.12.1)
+    sorbet-runtime (0.5.11139)
+    sorbet-struct-comparable (1.3.0)
+      sorbet-runtime (>= 0.5)
 
 PLATFORMS
   arm64-darwin-21
+  x86_64-darwin-21
 
 DEPENDENCIES
+  diff-lcs
   grpc-tools
+  json
+  rspec
+  sorbet-runtime
+  sorbet-struct-comparable
 
 BUNDLED WITH
    2.3.7

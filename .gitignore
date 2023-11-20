@@ -1,2 +1,3 @@
 .idea
 protoc-gen-rbi-out
+vendor

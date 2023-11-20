@@ -10,9 +10,18 @@ cd "${ROOT}"
 GO111MODULE=on go build -o "${TEST_PLUGIN}" ./
 
 protoc \
+    --rbi_out=./spec/proto \
+    --rbi_opt="grpc=false" \
+    --plugin=protoc-gen-rbi="${TEST_PLUGIN}" \
+    --proto_path=spec/proto/ ./spec/proto/simple.proto \
+    --experimental_allow_proto3_optional
+
+protoc \
     --rbi_out=../wallet/ \
     --rbi_opt="grpc=false" \
     --plugin=protoc-gen-rbi="${TEST_PLUGIN}" \
     --proto_path=../wallet/lib/frontend ../wallet/lib/frontend/frontend.proto \
     --experimental_allow_proto3_optional
 
+
+rspec
