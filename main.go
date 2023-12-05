@@ -1,12 +1,13 @@
 package main
 
 import (
-	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/types/pluginpb"
 	"log"
 	"regexp"
 	"strings"
 	"text/template"
+
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/pluginpb"
 
 	"github.com/coinbase/protoc-gen-rbi/ruby_types"
 	"github.com/thematthopkins/elm-protobuf/pkg/forwardextensions"
@@ -201,8 +202,8 @@ end
 {{ end }}
 
 # T::Structs require forward declarations of reference classes
-# dynamically declaring them like this hides the duplicate 
-# declaration from sorbet, and keeps ruby happy about 
+# dynamically declaring them like this hides the duplicate
+# declaration from sorbet, and keeps ruby happy about
 # classes existing before they're referenced
 {{ range .AllMessages }}{{ rubyMessageType . }} = Class.new(T::Struct)
 {{ end }}
@@ -233,10 +234,10 @@ class {{ rubyMessageType . }} < T::Struct
   include T::Props::Serializable
   include T::Struct::ActsAsComparable
 {{ range .Fields }}{{ if not (.InRealOneOf) }}
-  const :{{ .Name }}, {{ rubyGetterFieldType . }}
+  prop :{{ .Name }}, {{ rubyGetterFieldType . }}
 {{ end }}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
   module {{.Name.UpperCamelCase}}; end
-  const :{{ .Name.LowerSnakeCase }}, {{ .Name.UpperCamelCase }}
+  prop :{{ .Name.LowerSnakeCase }}, {{ .Name.UpperCamelCase }}
 {{ end }}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
   module {{ .Name.UpperCamelCase }}{{ $oneOfName := .Name.UpperCamelCase }}
     extend T::Sig
@@ -377,7 +378,7 @@ module {{ rubyPackage .File }}Service
     abstract!
 
     # rails routing doesn't like to route to super classes
-    # automatically define our stubs in the sub classes, so it can 
+    # automatically define our stubs in the sub classes, so it can
     # find them
     sig do
       params(subclass: T::Class[T.untyped]).void

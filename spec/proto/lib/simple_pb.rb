@@ -49,8 +49,8 @@ end
 
 
 # T::Structs require forward declarations of reference classes
-# dynamically declaring them like this hides the duplicate 
-# declaration from sorbet, and keeps ruby happy about 
+# dynamically declaring them like this hides the duplicate
+# declaration from sorbet, and keeps ruby happy about
 # classes existing before they're referenced
 SimplePb::Empty = Class.new(T::Struct)
 SimplePb::Simple = Class.new(T::Struct)
@@ -94,7 +94,7 @@ class SimplePb::Simple < T::Struct
   include T::Props::Serializable
   include T::Struct::ActsAsComparable
 
-  const :int32_field, Integer
+  prop :int32_field, Integer
 
   sig { returns(String) }
   def to_json
@@ -129,38 +129,38 @@ class SimplePb::Foo < T::Struct
   include T::Props::Serializable
   include T::Struct::ActsAsComparable
 
-  const :s, SimplePb::Simple
+  prop :s, SimplePb::Simple
 
-  const :ss, T::Array[SimplePb::Simple]
+  prop :ss, T::Array[SimplePb::Simple]
 
-  const :optional_s, T.nilable(SimplePb::Simple)
+  prop :optional_s, T.nilable(SimplePb::Simple)
 
-  const :colour, SimplePb::Colour
+  prop :colour, SimplePb::Colour
 
-  const :colours, T::Array[SimplePb::Colour]
+  prop :colours, T::Array[SimplePb::Colour]
 
-  const :optional_colour, T.nilable(SimplePb::Colour)
+  prop :optional_colour, T.nilable(SimplePb::Colour)
 
-  const :int_field, Integer
+  prop :int_field, Integer
 
-  const :int_fields, T::Array[Integer]
+  prop :int_fields, T::Array[Integer]
 
-  const :optional_int_field, T.nilable(Integer)
+  prop :optional_int_field, T.nilable(Integer)
 
-  const :int64_field, Integer
+  prop :int64_field, Integer
 
-  const :int64_fields, T::Array[Integer]
+  prop :int64_fields, T::Array[Integer]
 
-  const :optional_int64_field, T.nilable(Integer)
+  prop :optional_int64_field, T.nilable(Integer)
 
-  const :timestamp_field, Time
+  prop :timestamp_field, Time
 
-  const :timestamp_fields, T::Array[Time]
+  prop :timestamp_fields, T::Array[Time]
 
-  const :optional_timestamp_field, T.nilable(Time)
+  prop :optional_timestamp_field, T.nilable(Time)
 
   module Oo; end
-  const :oo, Oo
+  prop :oo, Oo
 
   module Oo
     extend T::Sig
