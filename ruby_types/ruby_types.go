@@ -44,6 +44,11 @@ func RubyPackage(file pgs.File) string {
 	return upperCamelCase(pkg)
 }
 
+func Validators(field pgs.Field) []elm.Validator {
+	elm.Validators()
+	return []string{}
+}
+
 func RubyMessageType(entity EntityWithParent) string {
 	names := make([]string, 0)
 	outer := entity
