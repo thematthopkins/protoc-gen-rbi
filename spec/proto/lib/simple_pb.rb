@@ -324,7 +324,7 @@ class SimplePb::Foo < T::Struct
       timestamp_field: Time.iso8601(PbHelper::withDefault(hash["timestampField"], "1970-01-01T00:00:00Z")),
       timestamp_fields: PbHelper::withDefault(hash["timestampFields"], []).map{Time.iso8601(_1)},
       optional_timestamp_field: PbHelper::mapNil(hash["optionalTimestampField"]) { Time.iso8601(hash["optionalTimestampField"]) },
-      oo: Oo.from_hash(hash)
+      oo: Oo.from_hash(hash),
     )
   end
 end

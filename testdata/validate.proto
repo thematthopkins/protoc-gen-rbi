@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+import "forwardextensions.proto";
+import "google/protobuf/timestamp.proto";
+
+option (elm_package)="ValidationsSubject";
+option (custom_validators_package)="CustomValidators";
+option (global_validation_data_struct)="CustomValidationData";
+
+message Empty {
+}
+
+message Simple {
+  optional int32 int32_field = 1;
+}
+
+enum Colour {
+  RED = 0;
+  GREEN = 1;
+  BLUE = 2;
+}
+
+message Foo {
+  message NestedSimple {
+    optional int32 optional_nested_int = 1;
+  }
+
+  Simple required_simple = 1;
+  optional Simple maybe_simple = 2;
+  optional Simple not_required_maybe_simple = 3 [(not_required) = true];
+
+  NestedSimple required_nested_simple = 4;
+  optional NestedSimple maybe_nested_simple = 5;
+  optional NestedSimple not_required_maybe_nested_simple = 6 [(not_required) = true];
+
+  int32 required_int = 7;
+  optional int32 maybe_int = 8;
+  optional int32 not_required_maybe_int = 9 [(not_required) = true];
+
+
+  bool required_bool = 10;
+  optional bool maybe_bool = 11;
+
+  Colour required_enum = 12;
+  optional Colour maybe_enum = 13;
+
+  oneof oneof {
+    string string_field = 14 [(custom_validator) = "oneofFieldValidator"];
+    int32 int_field = 15[(custom_validator) = "oneofFieldValidator"];
+  }
+
+
+  optional string maybe_string_relevant_if_required_bool = 16 [(relevant_if_field_true) = "required_bool"];
+  optional string maybe_string_relevant_if_maybe_bool = 17 [(relevant_if_field_true) = "maybe_bool"];
+
+  string required_string_with_custom_validator = 18 [(custom_validator) = "requiredStringCustomValidator"];
+  optional string maybe_string_with_custom_validator = 19 [(custom_validator) = "requiredMaybeStringCustomValidator"];
+
+  repeated string repeated_string_custom_validator = 20 [(custom_validator) = "repeatedStringCustomValidator"];
+}

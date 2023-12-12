@@ -1,0 +1,48 @@
+/*
+The output from generators of this need to be fed back into the generators.
+
+
+For elm:
+
+edit the copy at forwardextensions/forwardextensions.proto
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+protoc --go_out=. --proto_path=./forwardextensions forwardextensions.proto
+
+
+For rbi:
+
+Copy pkg/forwardextensions/forwardextensions.pb.go from the elm repo into protoc-gen-rbi repo
+Copy this file into /testdata  in protoc-gen-rbi
+*/
+
+import "google/protobuf/descriptor.proto";
+
+option go_package = "/pkg/forwardextensions";
+
+extend google.protobuf.FileOptions {
+  optional string elm_package = 50000;
+}
+
+extend google.protobuf.FieldOptions {
+  optional string id_type_override = 50001;
+}
+
+extend google.protobuf.MessageOptions {
+  optional bool singleton = 50002;
+}
+
+extend google.protobuf.MethodOptions {
+  optional bool unauthenticated = 50003;
+}
+
+// validation
+extend google.protobuf.FileOptions {
+  optional string custom_validators_package = 50006;
+  optional string global_validation_data_struct = 50007;
+}
+
+extend google.protobuf.FieldOptions {
+  optional string relevant_if_field_true = 50008;
+  optional bool not_required = 50009;
+  optional string custom_validator = 50010;
+}

@@ -325,7 +325,7 @@ class {{ rubyMessageType . }} < T::Struct
   def self.from_hash(hash)
     new({{ range .Fields }}{{ if not (.InRealOneOf) }}
       {{ .Name }}: {{ fieldDecoder (.Name.LowerCamelCase.String) .Type }},{{end}}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
-      {{ .Name.LowerCamelCase }}: {{ .Name.UpperCamelCase }}.from_hash(hash){{ end }}{{ end }}
+      {{ .Name.LowerCamelCase }}: {{ .Name.UpperCamelCase }}.from_hash(hash),{{ end }}{{ end }}
     )
   end
 end

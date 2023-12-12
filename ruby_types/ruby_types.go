@@ -56,9 +56,17 @@ func Validators(field pgs.Field) []string {
 	)
 
 	for _, v := range validators {
-		results = append(results, ((pgs.Name)(v.Name)).UpperCamelCase().String())
+		results = append(results, validatorToString(v))
 	}
 	return results
+}
+
+func validatorToString(v elm.Validator) string {
+	if v.FieldArg != "" {
+		return ((pgs.Name)(v.Name)).UpperCamelCase().String() + "( ->(m) { m." + ((pgs.Name)(v.FieldArg)).LowerSnakeCase().String() + "})"
+	} else {
+		return ((pgs.Name)(v.Name)).UpperCamelCase().String()
+	}
 }
 
 func ReadableLabel(name pgs.Name) string {
@@ -79,7 +87,7 @@ func OneOfValidators(oneOf pgs.OneOf) []string {
 	)
 
 	for _, v := range validators {
-		results = append(results, ((pgs.Name)(v.Name)).UpperCamelCase().String())
+		results = append(results, validatorToString(v))
 	}
 	return results
 }

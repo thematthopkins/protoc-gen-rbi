@@ -1423,10 +1423,8 @@ github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o
 github.com/stretchr/testify v1.8.2/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.8.3 h1:RP3t2pwF7cMEbC1dqtB6poj3niw/9gnV4Cjg5oW5gtY=
 github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
-github.com/thematthopkins/elm-protobuf v0.0.5-0.20231211205759-102efa2c712a h1:xH+oOc33V2Sw/sbE+4CD6QDQRyp8/4NCYggLgmj3Xe8=
-github.com/thematthopkins/elm-protobuf v0.0.5-0.20231211205759-102efa2c712a/go.mod h1:T3WO18KS4HvOnjRvu3r1njnVBKicSV7udKC8QFwFPoE=
-github.com/thematthopkins/elm-protobuf v0.0.5-0.20231212130548-1d74dd5c0b61 h1:ThRAHbd0KLrggD8ceeuhWOMmT4c3gDXNNxXdQ+7vRuU=
-github.com/thematthopkins/elm-protobuf v0.0.5-0.20231212130548-1d74dd5c0b61/go.mod h1:T3WO18KS4HvOnjRvu3r1njnVBKicSV7udKC8QFwFPoE=
+github.com/thematthopkins/elm-protobuf v0.0.5-0.20231212191817-df2b3e8a27ab h1:fyz8aFlmjlEEAJQh04oolZqXXAm8j2kjEtCs3uVkLEw=
+github.com/thematthopkins/elm-protobuf v0.0.5-0.20231212191817-df2b3e8a27ab/go.mod h1:T3WO18KS4HvOnjRvu3r1njnVBKicSV7udKC8QFwFPoE=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
