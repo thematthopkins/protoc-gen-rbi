@@ -11,7 +11,6 @@ protoc --go_out=. --proto_path=./forwardextensions forwardextensions.proto
 
 For rbi:
 
-Copy pkg/forwardextensions/forwardextensions.pb.go from the elm repo into protoc-gen-rbi repo
 Copy this file into /testdata  in protoc-gen-rbi
 */
 
@@ -45,4 +44,9 @@ extend google.protobuf.FieldOptions {
   optional string relevant_if_field_true = 50008;
   optional bool not_required = 50009;
   optional string custom_validator = 50010;
+
+  // comma separated list of set names to belong to
+  // only affects frontend code geeration.
+  // This makes page validation easier
+  optional string field_sets = 50011;
 }
