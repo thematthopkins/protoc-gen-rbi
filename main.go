@@ -62,6 +62,8 @@ func (m *rbiModule) InitContext(c pgs.BuildContext) {
 		"optionalOneOf":                m.optionalOneOf,
 		"willGenerateInvalidRuby":      m.willGenerateInvalidRuby,
 		"validators":                   ruby_types.Validators,
+		"oneOfValidators":              ruby_types.OneOfValidators,
+		"readableLabel":                ruby_types.ReadableLabel,
 		"rubyPackage":                  ruby_types.RubyPackage,
 		"rubyMessageType":              ruby_types.RubyMessageType,
 		"fieldEncoder":                 ruby_types.FieldEncoder,
@@ -124,7 +126,7 @@ func (m *rbiModule) generateHttpServices(f pgs.File) {
 }
 
 func (m *rbiModule) generateValidator(f pgs.File) {
-	op := "lib/" + strings.TrimSuffix(f.InputPath().String(), ".proto") + "_validator.rb"
+	op := "lib/" + strings.TrimSuffix(f.InputPath().String(), ".proto") + "_pb_validator.rb"
 	m.AddGeneratorTemplateFile(op, m.validatorTpl, f)
 }
 
@@ -429,8 +431,9 @@ const validatorTpl = `# typed: strict
 {{ range .AllMessages }}
 
 {{ $message := . }}
-class {{ rubyMessageType . }}Validators < T::Struct
+class {{ rubyMessageType . }}Validators
   extend T::Sig
+  include Validation
 
 
   include T::Props::Serializable
@@ -439,8 +442,9 @@ class {{ rubyMessageType . }}Validators < T::Struct
   sig {
     returns ValidatableField[{{ rubyMessageType $message }}, T.nilable(String)]
   }
-  def {{ .Name }}
+  def {{ .Name.LowerSnakeCase }}
     ValidatableField.new(
+      label: "{{ readableLabel .Name }}",
       getter: ->(message) { message.{{ .Name }} },
       setter: ->(message, field) { message.{{ .Name }} = field },
       validators: [
@@ -448,26 +452,33 @@ class {{ rubyMessageType . }}Validators < T::Struct
         {{ end }}
       ]
     )
+  end
 {{ end }}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
-  module {{.Name.UpperCamelCase}}; end
-  const :{{ .Name.LowerSnakeCase }}, {{ .Name.UpperCamelCase }}
-{{ end }}{{ end }}{{end}}
-
-module CompanyApplicationDataValidators
-  extend T::Sig
-
   sig {
-    returns ValidatableField[FrontendPb::CompanyApplicationData, T.nilable(String)]
+    returns ValidatableField[{{ rubyMessageType $message }}, T.nilable(String)]
   }
-  def applyForFuelCard
+  def {{ .Name.LowerSnakeCase }}
     ValidatableField.new(
-      getter: ->(message) { Validate.normalizeStringField(message.apply_for_fuel_card) },
-      setter: ->(message, field) { message.apply_for_fuel_card = field },
+      label: "{{ readableLabel .Name }}",
+      getter: ->(message) { message.{{ .Name.LowerSnakeCase }} },
+      setter: ->(message, field) { message.{{ .Name.LowerSnakeCase }} = field },
       validators: [
-        RequiredFieldValidator.new,
-        DateValidator.new,
-      ]
+        {{ range oneOfValidators . }}{{ . }}.new,
+        {{ end }}]
     )
   end
+{{ end }}{{ end }}
+
+  sig {
+      returns(T::Array[[String, MessageValidator[{{ rubyMessageType $message }}]]])
+  }
+  def all_model_validators
+    [{{ range .Fields }}{{ if not (.InRealOneOf) }}
+        ["{{ readableLabel .Name }}", {{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
+{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
+        ["{{ readableLabel .Name }}", {{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
+    ]
+  end
 end
+{{end}}
 `

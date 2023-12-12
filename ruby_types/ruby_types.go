@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/thematthopkins/elm-protobuf/pkg/elm"
+	"github.com/thematthopkins/elm-protobuf/pkg/stringextras"
+	"google.golang.org/protobuf/types/descriptorpb"
 	"log"
 	"strings"
 
@@ -44,9 +46,42 @@ func RubyPackage(file pgs.File) string {
 	return upperCamelCase(pkg)
 }
 
-func Validators(field pgs.Field) []elm.Validator {
-	elm.Validators()
-	return []string{}
+func Validators(field pgs.Field) []string {
+	results := []string{}
+	validators := elm.Validators(
+		field.Type().Field().Message().File().Descriptor(),
+		field.Type().Field().Message().Descriptor(),
+		field.Type().Field().Descriptor(),
+		field.Type().Field().Descriptor().GetProto3Optional(),
+	)
+
+	for _, v := range validators {
+		results = append(results, ((pgs.Name)(v.Name)).UpperCamelCase().String())
+	}
+	return results
+}
+
+func ReadableLabel(name pgs.Name) string {
+	return stringextras.Label((string)(name))
+}
+
+func OneOfValidators(oneOf pgs.OneOf) []string {
+	results := []string{}
+	fields := []*descriptorpb.FieldDescriptorProto{}
+	for _, v := range oneOf.Fields() {
+		fields = append(fields, v.Descriptor())
+	}
+
+	validators := elm.OneOfValidatorsForFields(
+		oneOf.Message().File().Descriptor(),
+		oneOf.Message().Descriptor(),
+		fields,
+	)
+
+	for _, v := range validators {
+		results = append(results, ((pgs.Name)(v.Name)).UpperCamelCase().String())
+	}
+	return results
 }
 
 func RubyMessageType(entity EntityWithParent) string {
