@@ -16,7 +16,7 @@ class SimplePb::EmptyValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[SimplePb::Empty]]])
+      returns(T::Array[MessageValidator[SimplePb::Empty]])
   }
   def all_model_validators
     [
@@ -40,7 +40,7 @@ class SimplePb::SimpleValidators
   }
   def int32_field
     ValidatableField.new(
-      label: "Int 32 Field",
+      translation: "<nil>",
       getter: ->(message) { message.int32_field },
       setter: ->(message, field) { message.int32_field = field },
       validators: [
@@ -51,11 +51,11 @@ class SimplePb::SimpleValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[SimplePb::Simple]]])
+      returns(T::Array[MessageValidator[SimplePb::Simple]])
   }
   def all_model_validators
     [
-        ["Int 32 Field", int32_field.message_validator],
+        [int32_field.message_validator],
 
     ]
   end
@@ -76,7 +76,7 @@ class SimplePb::FooValidators
   }
   def s
     ValidatableField.new(
-      label: "S",
+      translation: "<nil>",
       getter: ->(message) { message.s },
       setter: ->(message, field) { message.s = field },
       validators: [
@@ -90,7 +90,7 @@ class SimplePb::FooValidators
   }
   def ss
     ValidatableField.new(
-      label: "Ss",
+      translation: "<nil>",
       getter: ->(message) { message.ss },
       setter: ->(message, field) { message.ss = field },
       validators: [
@@ -104,7 +104,7 @@ class SimplePb::FooValidators
   }
   def optional_s
     ValidatableField.new(
-      label: "Optional S",
+      translation: "<nil>",
       getter: ->(message) { message.optional_s },
       setter: ->(message, field) { message.optional_s = field },
       validators: [
@@ -119,7 +119,7 @@ class SimplePb::FooValidators
   }
   def colour
     ValidatableField.new(
-      label: "Colour",
+      translation: "<nil>",
       getter: ->(message) { message.colour },
       setter: ->(message, field) { message.colour = field },
       validators: [
@@ -133,7 +133,7 @@ class SimplePb::FooValidators
   }
   def colours
     ValidatableField.new(
-      label: "Colours",
+      translation: "<nil>",
       getter: ->(message) { message.colours },
       setter: ->(message, field) { message.colours = field },
       validators: [
@@ -147,7 +147,7 @@ class SimplePb::FooValidators
   }
   def optional_colour
     ValidatableField.new(
-      label: "Optional Colour",
+      translation: "<nil>",
       getter: ->(message) { message.optional_colour },
       setter: ->(message, field) { message.optional_colour = field },
       validators: [
@@ -162,7 +162,7 @@ class SimplePb::FooValidators
   }
   def int_field
     ValidatableField.new(
-      label: "Int Field",
+      translation: "<nil>",
       getter: ->(message) { message.int_field },
       setter: ->(message, field) { message.int_field = field },
       validators: [
@@ -176,7 +176,7 @@ class SimplePb::FooValidators
   }
   def int_fields
     ValidatableField.new(
-      label: "Int Fields",
+      translation: "<nil>",
       getter: ->(message) { message.int_fields },
       setter: ->(message, field) { message.int_fields = field },
       validators: [
@@ -190,7 +190,7 @@ class SimplePb::FooValidators
   }
   def optional_int_field
     ValidatableField.new(
-      label: "Optional Int Field",
+      translation: "<nil>",
       getter: ->(message) { message.optional_int_field },
       setter: ->(message, field) { message.optional_int_field = field },
       validators: [
@@ -205,7 +205,7 @@ class SimplePb::FooValidators
   }
   def int64_field
     ValidatableField.new(
-      label: "Int 64 Field",
+      translation: "<nil>",
       getter: ->(message) { message.int64_field },
       setter: ->(message, field) { message.int64_field = field },
       validators: [
@@ -219,7 +219,7 @@ class SimplePb::FooValidators
   }
   def int64_fields
     ValidatableField.new(
-      label: "Int 64 Fields",
+      translation: "<nil>",
       getter: ->(message) { message.int64_fields },
       setter: ->(message, field) { message.int64_fields = field },
       validators: [
@@ -233,7 +233,7 @@ class SimplePb::FooValidators
   }
   def optional_int64_field
     ValidatableField.new(
-      label: "Optional Int 64 Field",
+      translation: "<nil>",
       getter: ->(message) { message.optional_int64_field },
       setter: ->(message, field) { message.optional_int64_field = field },
       validators: [
@@ -248,7 +248,7 @@ class SimplePb::FooValidators
   }
   def timestamp_field
     ValidatableField.new(
-      label: "Timestamp Field",
+      translation: "<nil>",
       getter: ->(message) { message.timestamp_field },
       setter: ->(message, field) { message.timestamp_field = field },
       validators: [
@@ -262,7 +262,7 @@ class SimplePb::FooValidators
   }
   def timestamp_fields
     ValidatableField.new(
-      label: "Timestamp Fields",
+      translation: "<nil>",
       getter: ->(message) { message.timestamp_fields },
       setter: ->(message, field) { message.timestamp_fields = field },
       validators: [
@@ -276,7 +276,7 @@ class SimplePb::FooValidators
   }
   def optional_timestamp_field
     ValidatableField.new(
-      label: "Optional Timestamp Field",
+      translation: "<nil>",
       getter: ->(message) { message.optional_timestamp_field },
       setter: ->(message, field) { message.optional_timestamp_field = field },
       validators: [
@@ -291,7 +291,7 @@ class SimplePb::FooValidators
   }
   def oo
     ValidatableField.new(
-      label: "Oo",
+      translation: "<nil>",
       getter: ->(message) { message.oo },
       setter: ->(message, field) { message.oo = field },
       validators: [
@@ -301,27 +301,27 @@ class SimplePb::FooValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[SimplePb::Foo]]])
+      returns(T::Array[MessageValidator[SimplePb::Foo]])
   }
   def all_model_validators
     [
-        ["S", s.message_validator],
-        ["Ss", ss.message_validator],
-        ["Optional S", optional_s.message_validator],
-        ["Colour", colour.message_validator],
-        ["Colours", colours.message_validator],
-        ["Optional Colour", optional_colour.message_validator],
-        ["Int Field", int_field.message_validator],
-        ["Int Fields", int_fields.message_validator],
-        ["Optional Int Field", optional_int_field.message_validator],
-        ["Int 64 Field", int64_field.message_validator],
-        ["Int 64 Fields", int64_fields.message_validator],
-        ["Optional Int 64 Field", optional_int64_field.message_validator],
-        ["Timestamp Field", timestamp_field.message_validator],
-        ["Timestamp Fields", timestamp_fields.message_validator],
-        ["Optional Timestamp Field", optional_timestamp_field.message_validator],
+        [s.message_validator],
+        [ss.message_validator],
+        [optional_s.message_validator],
+        [colour.message_validator],
+        [colours.message_validator],
+        [optional_colour.message_validator],
+        [int_field.message_validator],
+        [int_fields.message_validator],
+        [optional_int_field.message_validator],
+        [int64_field.message_validator],
+        [int64_fields.message_validator],
+        [optional_int64_field.message_validator],
+        [timestamp_field.message_validator],
+        [timestamp_fields.message_validator],
+        [optional_timestamp_field.message_validator],
 
-        ["Oo", oo.message_validator],
+        [oo.message_validator],
     ]
   end
 end

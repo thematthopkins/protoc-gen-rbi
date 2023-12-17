@@ -63,7 +63,8 @@ func (m *rbiModule) InitContext(c pgs.BuildContext) {
 		"willGenerateInvalidRuby":      m.willGenerateInvalidRuby,
 		"validators":                   ruby_types.Validators,
 		"oneOfValidators":              ruby_types.OneOfValidators,
-		"readableLabel":                ruby_types.ReadableLabel,
+		"oneOfTranslation":             ruby_types.OneOfTranslation,
+		"translation":                  ruby_types.Translation,
 		"rubyPackage":                  ruby_types.RubyPackage,
 		"rubyMessageType":              ruby_types.RubyMessageType,
 		"fieldEncoder":                 ruby_types.FieldEncoder,
@@ -444,7 +445,7 @@ class {{ rubyMessageType . }}Validators
   }
   def {{ .Name.LowerSnakeCase }}
     ValidatableField.new(
-      label: "{{ readableLabel .Name }}",
+      translation: "{{ translation . }}",
       getter: ->(message) { message.{{ .Name }} },
       setter: ->(message, field) { message.{{ .Name }} = field },
       validators: [
@@ -459,7 +460,7 @@ class {{ rubyMessageType . }}Validators
   }
   def {{ .Name.LowerSnakeCase }}
     ValidatableField.new(
-      label: "{{ readableLabel .Name }}",
+      translation: "{{ oneOfTranslation . }}",
       getter: ->(message) { message.{{ .Name.LowerSnakeCase }} },
       setter: ->(message, field) { message.{{ .Name.LowerSnakeCase }} = field },
       validators: [
@@ -470,13 +471,13 @@ class {{ rubyMessageType . }}Validators
 {{ end }}{{ end }}
 
   sig {
-      returns(T::Array[[String, MessageValidator[{{ rubyMessageType $message }}]]])
+      returns(T::Array[MessageValidator[{{ rubyMessageType $message }}]])
   }
   def all_model_validators
     [{{ range .Fields }}{{ if not (.InRealOneOf) }}
-        ["{{ readableLabel .Name }}", {{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
+        [{{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
 {{ range .OneOfs }}{{ if not (optionalOneOf .) }}
-        ["{{ readableLabel .Name }}", {{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
+        [{{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
     ]
   end
 end

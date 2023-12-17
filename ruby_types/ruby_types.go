@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/thematthopkins/elm-protobuf/pkg/elm"
-	"github.com/thematthopkins/elm-protobuf/pkg/stringextras"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"log"
 	"strings"
@@ -69,8 +68,12 @@ func validatorToString(v elm.Validator) string {
 	}
 }
 
-func ReadableLabel(name pgs.Name) string {
-	return stringextras.Label((string)(name))
+func Translation(field pgs.Field) *pgs.Name {
+	return (*pgs.Name)(elm.GetTranslation(field.Type().Field().Descriptor()))
+}
+
+func OneOfTranslation(oneof pgs.OneOf) *pgs.Name {
+	return Translation(oneof.Fields()[0])
 }
 
 func OneOfValidators(oneOf pgs.OneOf) []string {

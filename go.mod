@@ -6,7 +6,7 @@ require (
 	github.com/golang/protobuf v1.5.3
 	github.com/lyft/protoc-gen-star v0.6.2
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/thematthopkins/elm-protobuf v0.0.5-0.20231212211052-2b46045c971b
-	golang.org/x/tools v0.16.0 // indirect
+	github.com/thematthopkins/elm-protobuf v0.0.5-0.20231217214805-385170e7c602 // indirect
+	golang.org/x/tools v0.16.1 // indirect
 	google.golang.org/protobuf v1.31.0
 )

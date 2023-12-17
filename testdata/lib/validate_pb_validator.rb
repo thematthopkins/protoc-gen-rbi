@@ -16,7 +16,7 @@ class ::EmptyValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[::Empty]]])
+      returns(T::Array[MessageValidator[::Empty]])
   }
   def all_model_validators
     [
@@ -40,7 +40,7 @@ class ::SimpleValidators
   }
   def int32_field
     ValidatableField.new(
-      label: "Int 32 Field",
+      translation: "<nil>",
       getter: ->(message) { message.int32_field },
       setter: ->(message, field) { message.int32_field = field },
       validators: [
@@ -52,11 +52,11 @@ class ::SimpleValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[::Simple]]])
+      returns(T::Array[MessageValidator[::Simple]])
   }
   def all_model_validators
     [
-        ["Int 32 Field", int32_field.message_validator],
+        [int32_field.message_validator],
 
     ]
   end
@@ -77,7 +77,7 @@ class ::FooValidators
   }
   def required_simple
     ValidatableField.new(
-      label: "Required Simple",
+      translation: "<nil>",
       getter: ->(message) { message.required_simple },
       setter: ->(message, field) { message.required_simple = field },
       validators: [
@@ -91,7 +91,7 @@ class ::FooValidators
   }
   def maybe_simple
     ValidatableField.new(
-      label: "Maybe Simple",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_simple },
       setter: ->(message, field) { message.maybe_simple = field },
       validators: [
@@ -106,7 +106,7 @@ class ::FooValidators
   }
   def not_required_maybe_simple
     ValidatableField.new(
-      label: "Not Required Maybe Simple",
+      translation: "<nil>",
       getter: ->(message) { message.not_required_maybe_simple },
       setter: ->(message, field) { message.not_required_maybe_simple = field },
       validators: [
@@ -120,7 +120,7 @@ class ::FooValidators
   }
   def required_nested_simple
     ValidatableField.new(
-      label: "Required Nested Simple",
+      translation: "<nil>",
       getter: ->(message) { message.required_nested_simple },
       setter: ->(message, field) { message.required_nested_simple = field },
       validators: [
@@ -134,7 +134,7 @@ class ::FooValidators
   }
   def maybe_nested_simple
     ValidatableField.new(
-      label: "Maybe Nested Simple",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_nested_simple },
       setter: ->(message, field) { message.maybe_nested_simple = field },
       validators: [
@@ -149,7 +149,7 @@ class ::FooValidators
   }
   def not_required_maybe_nested_simple
     ValidatableField.new(
-      label: "Not Required Maybe Nested Simple",
+      translation: "<nil>",
       getter: ->(message) { message.not_required_maybe_nested_simple },
       setter: ->(message, field) { message.not_required_maybe_nested_simple = field },
       validators: [
@@ -163,7 +163,7 @@ class ::FooValidators
   }
   def required_int
     ValidatableField.new(
-      label: "Required Int",
+      translation: "<nil>",
       getter: ->(message) { message.required_int },
       setter: ->(message, field) { message.required_int = field },
       validators: [
@@ -177,7 +177,7 @@ class ::FooValidators
   }
   def maybe_int
     ValidatableField.new(
-      label: "Maybe Int",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_int },
       setter: ->(message, field) { message.maybe_int = field },
       validators: [
@@ -192,7 +192,7 @@ class ::FooValidators
   }
   def not_required_maybe_int
     ValidatableField.new(
-      label: "Not Required Maybe Int",
+      translation: "<nil>",
       getter: ->(message) { message.not_required_maybe_int },
       setter: ->(message, field) { message.not_required_maybe_int = field },
       validators: [
@@ -206,7 +206,7 @@ class ::FooValidators
   }
   def required_bool
     ValidatableField.new(
-      label: "Required Bool",
+      translation: "<nil>",
       getter: ->(message) { message.required_bool },
       setter: ->(message, field) { message.required_bool = field },
       validators: [
@@ -220,7 +220,7 @@ class ::FooValidators
   }
   def maybe_bool
     ValidatableField.new(
-      label: "Maybe Bool",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_bool },
       setter: ->(message, field) { message.maybe_bool = field },
       validators: [
@@ -235,7 +235,7 @@ class ::FooValidators
   }
   def required_enum
     ValidatableField.new(
-      label: "Required Enum",
+      translation: "<nil>",
       getter: ->(message) { message.required_enum },
       setter: ->(message, field) { message.required_enum = field },
       validators: [
@@ -249,7 +249,7 @@ class ::FooValidators
   }
   def maybe_enum
     ValidatableField.new(
-      label: "Maybe Enum",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_enum },
       setter: ->(message, field) { message.maybe_enum = field },
       validators: [
@@ -264,7 +264,7 @@ class ::FooValidators
   }
   def maybe_string_relevant_if_required_bool
     ValidatableField.new(
-      label: "Maybe String Relevant If Required Bool",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_string_relevant_if_required_bool },
       setter: ->(message, field) { message.maybe_string_relevant_if_required_bool = field },
       validators: [
@@ -279,7 +279,7 @@ class ::FooValidators
   }
   def maybe_string_relevant_if_maybe_bool
     ValidatableField.new(
-      label: "Maybe String Relevant If Maybe Bool",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_string_relevant_if_maybe_bool },
       setter: ->(message, field) { message.maybe_string_relevant_if_maybe_bool = field },
       validators: [
@@ -294,7 +294,7 @@ class ::FooValidators
   }
   def required_string_with_custom_validator
     ValidatableField.new(
-      label: "Required String With Custom Validator",
+      translation: "<nil>",
       getter: ->(message) { message.required_string_with_custom_validator },
       setter: ->(message, field) { message.required_string_with_custom_validator = field },
       validators: [
@@ -309,7 +309,7 @@ class ::FooValidators
   }
   def maybe_string_with_custom_validator
     ValidatableField.new(
-      label: "Maybe String With Custom Validator",
+      translation: "<nil>",
       getter: ->(message) { message.maybe_string_with_custom_validator },
       setter: ->(message, field) { message.maybe_string_with_custom_validator = field },
       validators: [
@@ -325,7 +325,7 @@ class ::FooValidators
   }
   def repeated_string_custom_validator
     ValidatableField.new(
-      label: "Repeated String Custom Validator",
+      translation: "<nil>",
       getter: ->(message) { message.repeated_string_custom_validator },
       setter: ->(message, field) { message.repeated_string_custom_validator = field },
       validators: [
@@ -340,7 +340,7 @@ class ::FooValidators
   }
   def oneof
     ValidatableField.new(
-      label: "Oneof",
+      translation: "<nil>",
       getter: ->(message) { message.oneof },
       setter: ->(message, field) { message.oneof = field },
       validators: [
@@ -351,30 +351,30 @@ class ::FooValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[::Foo]]])
+      returns(T::Array[MessageValidator[::Foo]])
   }
   def all_model_validators
     [
-        ["Required Simple", required_simple.message_validator],
-        ["Maybe Simple", maybe_simple.message_validator],
-        ["Not Required Maybe Simple", not_required_maybe_simple.message_validator],
-        ["Required Nested Simple", required_nested_simple.message_validator],
-        ["Maybe Nested Simple", maybe_nested_simple.message_validator],
-        ["Not Required Maybe Nested Simple", not_required_maybe_nested_simple.message_validator],
-        ["Required Int", required_int.message_validator],
-        ["Maybe Int", maybe_int.message_validator],
-        ["Not Required Maybe Int", not_required_maybe_int.message_validator],
-        ["Required Bool", required_bool.message_validator],
-        ["Maybe Bool", maybe_bool.message_validator],
-        ["Required Enum", required_enum.message_validator],
-        ["Maybe Enum", maybe_enum.message_validator],
-        ["Maybe String Relevant If Required Bool", maybe_string_relevant_if_required_bool.message_validator],
-        ["Maybe String Relevant If Maybe Bool", maybe_string_relevant_if_maybe_bool.message_validator],
-        ["Required String With Custom Validator", required_string_with_custom_validator.message_validator],
-        ["Maybe String With Custom Validator", maybe_string_with_custom_validator.message_validator],
-        ["Repeated String Custom Validator", repeated_string_custom_validator.message_validator],
+        [required_simple.message_validator],
+        [maybe_simple.message_validator],
+        [not_required_maybe_simple.message_validator],
+        [required_nested_simple.message_validator],
+        [maybe_nested_simple.message_validator],
+        [not_required_maybe_nested_simple.message_validator],
+        [required_int.message_validator],
+        [maybe_int.message_validator],
+        [not_required_maybe_int.message_validator],
+        [required_bool.message_validator],
+        [maybe_bool.message_validator],
+        [required_enum.message_validator],
+        [maybe_enum.message_validator],
+        [maybe_string_relevant_if_required_bool.message_validator],
+        [maybe_string_relevant_if_maybe_bool.message_validator],
+        [required_string_with_custom_validator.message_validator],
+        [maybe_string_with_custom_validator.message_validator],
+        [repeated_string_custom_validator.message_validator],
 
-        ["Oneof", oneof.message_validator],
+        [oneof.message_validator],
     ]
   end
 end
@@ -394,7 +394,7 @@ class ::Foo::NestedSimpleValidators
   }
   def optional_nested_int
     ValidatableField.new(
-      label: "Optional Nested Int",
+      translation: "<nil>",
       getter: ->(message) { message.optional_nested_int },
       setter: ->(message, field) { message.optional_nested_int = field },
       validators: [
@@ -406,11 +406,11 @@ class ::Foo::NestedSimpleValidators
 
 
   sig {
-      returns(T::Array[[String, MessageValidator[::Foo::NestedSimple]]])
+      returns(T::Array[MessageValidator[::Foo::NestedSimple]])
   }
   def all_model_validators
     [
-        ["Optional Nested Int", optional_nested_int.message_validator],
+        [optional_nested_int.message_validator],
 
     ]
   end
