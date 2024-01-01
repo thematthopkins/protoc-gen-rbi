@@ -9,6 +9,7 @@
 class ::EmptyValidators
   extend T::Sig
   include Validation
+  include 
 
 
   include T::Props::Serializable
@@ -30,6 +31,7 @@ end
 class ::SimpleValidators
   extend T::Sig
   include Validation
+  include 
 
 
   include T::Props::Serializable
@@ -44,7 +46,7 @@ class ::SimpleValidators
       getter: ->(message) { message.int32_field },
       setter: ->(message, field) { message.int32_field = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -56,7 +58,7 @@ class ::SimpleValidators
   }
   def all_model_validators
     [
-        [int32_field.message_validator],
+        int32_field.message_validator,
 
     ]
   end
@@ -67,6 +69,7 @@ end
 class ::FooValidators
   extend T::Sig
   include Validation
+  include 
 
 
   include T::Props::Serializable
@@ -81,6 +84,7 @@ class ::FooValidators
       getter: ->(message) { message.required_simple },
       setter: ->(message, field) { message.required_simple = field },
       validators: [
+        Validation::ValidateSubMessage.new(SimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -95,7 +99,8 @@ class ::FooValidators
       getter: ->(message) { message.maybe_simple },
       setter: ->(message, field) { message.maybe_simple = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
+        Validation::ValidateSubMessageIfPresent.new(SimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -110,6 +115,7 @@ class ::FooValidators
       getter: ->(message) { message.not_required_maybe_simple },
       setter: ->(message, field) { message.not_required_maybe_simple = field },
       validators: [
+        Validation::ValidateSubMessageIfPresent.new(SimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -124,6 +130,7 @@ class ::FooValidators
       getter: ->(message) { message.required_nested_simple },
       setter: ->(message, field) { message.required_nested_simple = field },
       validators: [
+        Validation::ValidateSubMessage.new(FooNestedSimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -138,7 +145,8 @@ class ::FooValidators
       getter: ->(message) { message.maybe_nested_simple },
       setter: ->(message, field) { message.maybe_nested_simple = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
+        Validation::ValidateSubMessageIfPresent.new(FooNestedSimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -153,6 +161,7 @@ class ::FooValidators
       getter: ->(message) { message.not_required_maybe_nested_simple },
       setter: ->(message, field) { message.not_required_maybe_nested_simple = field },
       validators: [
+        Validation::ValidateSubMessageIfPresent.new(FooNestedSimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -181,7 +190,7 @@ class ::FooValidators
       getter: ->(message) { message.maybe_int },
       setter: ->(message, field) { message.maybe_int = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -224,7 +233,7 @@ class ::FooValidators
       getter: ->(message) { message.maybe_bool },
       setter: ->(message, field) { message.maybe_bool = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -253,7 +262,7 @@ class ::FooValidators
       getter: ->(message) { message.maybe_enum },
       setter: ->(message, field) { message.maybe_enum = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -268,7 +277,7 @@ class ::FooValidators
       getter: ->(message) { message.maybe_string_relevant_if_required_bool },
       setter: ->(message, field) { message.maybe_string_relevant_if_required_bool = field },
       validators: [
-        RelevantIfFieldTrue( ->(m) { m.required_bool}).new,
+        Validation::RelevantIfFieldTrue.new( ->(m) { m.required_bool}),
         
       ]
     )
@@ -283,7 +292,7 @@ class ::FooValidators
       getter: ->(message) { message.maybe_string_relevant_if_maybe_bool },
       setter: ->(message, field) { message.maybe_string_relevant_if_maybe_bool = field },
       validators: [
-        RelevantIfMaybeFieldTrue( ->(m) { m.maybe_bool}).new,
+        Validation::RelevantIfMaybeFieldTrue.new( ->(m) { m.maybe_bool}),
         
       ]
     )
@@ -298,7 +307,7 @@ class ::FooValidators
       getter: ->(message) { message.required_string_with_custom_validator },
       setter: ->(message, field) { message.required_string_with_custom_validator = field },
       validators: [
-        RequiredStringCustomValidator.new,
+        Validation::RequiredStringCustomValidator.new,
         
       ]
     )
@@ -313,8 +322,8 @@ class ::FooValidators
       getter: ->(message) { message.maybe_string_with_custom_validator },
       setter: ->(message, field) { message.maybe_string_with_custom_validator = field },
       validators: [
-        Required.new,
-        RequiredMaybeStringCustomValidator.new,
+        Validation::Required.new,
+        Validation::RequiredMaybeStringCustomValidator.new,
         
       ]
     )
@@ -329,7 +338,7 @@ class ::FooValidators
       getter: ->(message) { message.repeated_string_custom_validator },
       setter: ->(message, field) { message.repeated_string_custom_validator = field },
       validators: [
-        RepeatedStringCustomValidator.new,
+        Validation::RepeatedStringCustomValidator.new,
         
       ]
     )
@@ -344,7 +353,7 @@ class ::FooValidators
       getter: ->(message) { message.oneof },
       setter: ->(message, field) { message.oneof = field },
       validators: [
-        OneofFieldValidator.new,
+        Validation::OneofFieldValidator.new,
         ]
     )
   end
@@ -355,26 +364,26 @@ class ::FooValidators
   }
   def all_model_validators
     [
-        [required_simple.message_validator],
-        [maybe_simple.message_validator],
-        [not_required_maybe_simple.message_validator],
-        [required_nested_simple.message_validator],
-        [maybe_nested_simple.message_validator],
-        [not_required_maybe_nested_simple.message_validator],
-        [required_int.message_validator],
-        [maybe_int.message_validator],
-        [not_required_maybe_int.message_validator],
-        [required_bool.message_validator],
-        [maybe_bool.message_validator],
-        [required_enum.message_validator],
-        [maybe_enum.message_validator],
-        [maybe_string_relevant_if_required_bool.message_validator],
-        [maybe_string_relevant_if_maybe_bool.message_validator],
-        [required_string_with_custom_validator.message_validator],
-        [maybe_string_with_custom_validator.message_validator],
-        [repeated_string_custom_validator.message_validator],
+        required_simple.message_validator,
+        maybe_simple.message_validator,
+        not_required_maybe_simple.message_validator,
+        required_nested_simple.message_validator,
+        maybe_nested_simple.message_validator,
+        not_required_maybe_nested_simple.message_validator,
+        required_int.message_validator,
+        maybe_int.message_validator,
+        not_required_maybe_int.message_validator,
+        required_bool.message_validator,
+        maybe_bool.message_validator,
+        required_enum.message_validator,
+        maybe_enum.message_validator,
+        maybe_string_relevant_if_required_bool.message_validator,
+        maybe_string_relevant_if_maybe_bool.message_validator,
+        required_string_with_custom_validator.message_validator,
+        maybe_string_with_custom_validator.message_validator,
+        repeated_string_custom_validator.message_validator,
 
-        [oneof.message_validator],
+        oneof.message_validator,
     ]
   end
 end
@@ -384,6 +393,7 @@ end
 class ::Foo::NestedSimpleValidators
   extend T::Sig
   include Validation
+  include 
 
 
   include T::Props::Serializable
@@ -398,7 +408,7 @@ class ::Foo::NestedSimpleValidators
       getter: ->(message) { message.optional_nested_int },
       setter: ->(message, field) { message.optional_nested_int = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -410,7 +420,7 @@ class ::Foo::NestedSimpleValidators
   }
   def all_model_validators
     [
-        [optional_nested_int.message_validator],
+        optional_nested_int.message_validator,
 
     ]
   end

@@ -435,6 +435,7 @@ const validatorTpl = `# typed: strict
 class {{ rubyMessageType . }}Validators
   extend T::Sig
   include Validation
+  include {{ rubyPackage .File }}
 
 
   include T::Props::Serializable
@@ -449,7 +450,7 @@ class {{ rubyMessageType . }}Validators
       getter: ->(message) { message.{{ .Name }} },
       setter: ->(message, field) { message.{{ .Name }} = field },
       validators: [
-        {{ range validators . }}{{ . }}.new,
+        {{ range validators . }}{{ . }},
         {{ end }}
       ]
     )
@@ -464,7 +465,7 @@ class {{ rubyMessageType . }}Validators
       getter: ->(message) { message.{{ .Name.LowerSnakeCase }} },
       setter: ->(message, field) { message.{{ .Name.LowerSnakeCase }} = field },
       validators: [
-        {{ range oneOfValidators . }}{{ . }}.new,
+        {{ range oneOfValidators . }}{{ . }},
         {{ end }}]
     )
   end
@@ -475,9 +476,9 @@ class {{ rubyMessageType . }}Validators
   }
   def all_model_validators
     [{{ range .Fields }}{{ if not (.InRealOneOf) }}
-        [{{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
+        {{ .Name.LowerSnakeCase }}.message_validator,{{ end }}{{ end }}
 {{ range .OneOfs }}{{ if not (optionalOneOf .) }}
-        [{{ .Name.LowerSnakeCase }}.message_validator],{{ end }}{{ end }}
+        {{ .Name.LowerSnakeCase }}.message_validator,{{ end }}{{ end }}
     ]
   end
 end

@@ -61,10 +61,13 @@ func Validators(field pgs.Field) []string {
 }
 
 func validatorToString(v elm.Validator) string {
+	validatorName := "Validation::" + ((pgs.Name)(v.Name)).UpperCamelCase().String()
 	if v.FieldArg != "" {
-		return ((pgs.Name)(v.Name)).UpperCamelCase().String() + "( ->(m) { m." + ((pgs.Name)(v.FieldArg)).LowerSnakeCase().String() + "})"
+		return validatorName + ".new( ->(m) { m." + ((pgs.Name)(v.FieldArg)).LowerSnakeCase().String() + "})"
+	} else if v.ValidatorArg != "" {
+		return validatorName + ".new(" + ((pgs.Name)(v.ValidatorArg)).UpperCamelCase().String() + "Validators.new.all_model_validators)"
 	} else {
-		return ((pgs.Name)(v.Name)).UpperCamelCase().String()
+		return validatorName + ".new"
 	}
 }
 

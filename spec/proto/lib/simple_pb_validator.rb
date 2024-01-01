@@ -9,6 +9,7 @@
 class SimplePb::EmptyValidators
   extend T::Sig
   include Validation
+  include SimplePb
 
 
   include T::Props::Serializable
@@ -30,6 +31,7 @@ end
 class SimplePb::SimpleValidators
   extend T::Sig
   include Validation
+  include SimplePb
 
 
   include T::Props::Serializable
@@ -55,7 +57,7 @@ class SimplePb::SimpleValidators
   }
   def all_model_validators
     [
-        [int32_field.message_validator],
+        int32_field.message_validator,
 
     ]
   end
@@ -66,6 +68,7 @@ end
 class SimplePb::FooValidators
   extend T::Sig
   include Validation
+  include SimplePb
 
 
   include T::Props::Serializable
@@ -80,6 +83,7 @@ class SimplePb::FooValidators
       getter: ->(message) { message.s },
       setter: ->(message, field) { message.s = field },
       validators: [
+        Validation::ValidateSubMessage.new(SimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -94,6 +98,7 @@ class SimplePb::FooValidators
       getter: ->(message) { message.ss },
       setter: ->(message, field) { message.ss = field },
       validators: [
+        Validation::ValidateSubMessageList.new(SimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -108,7 +113,8 @@ class SimplePb::FooValidators
       getter: ->(message) { message.optional_s },
       setter: ->(message, field) { message.optional_s = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
+        Validation::ValidateSubMessageIfPresent.new(SimpleValidators.new.all_model_validators),
         
       ]
     )
@@ -151,7 +157,7 @@ class SimplePb::FooValidators
       getter: ->(message) { message.optional_colour },
       setter: ->(message, field) { message.optional_colour = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -194,7 +200,7 @@ class SimplePb::FooValidators
       getter: ->(message) { message.optional_int_field },
       setter: ->(message, field) { message.optional_int_field = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -237,7 +243,7 @@ class SimplePb::FooValidators
       getter: ->(message) { message.optional_int64_field },
       setter: ->(message, field) { message.optional_int64_field = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -280,7 +286,7 @@ class SimplePb::FooValidators
       getter: ->(message) { message.optional_timestamp_field },
       setter: ->(message, field) { message.optional_timestamp_field = field },
       validators: [
-        Required.new,
+        Validation::Required.new,
         
       ]
     )
@@ -305,23 +311,23 @@ class SimplePb::FooValidators
   }
   def all_model_validators
     [
-        [s.message_validator],
-        [ss.message_validator],
-        [optional_s.message_validator],
-        [colour.message_validator],
-        [colours.message_validator],
-        [optional_colour.message_validator],
-        [int_field.message_validator],
-        [int_fields.message_validator],
-        [optional_int_field.message_validator],
-        [int64_field.message_validator],
-        [int64_fields.message_validator],
-        [optional_int64_field.message_validator],
-        [timestamp_field.message_validator],
-        [timestamp_fields.message_validator],
-        [optional_timestamp_field.message_validator],
+        s.message_validator,
+        ss.message_validator,
+        optional_s.message_validator,
+        colour.message_validator,
+        colours.message_validator,
+        optional_colour.message_validator,
+        int_field.message_validator,
+        int_fields.message_validator,
+        optional_int_field.message_validator,
+        int64_field.message_validator,
+        int64_fields.message_validator,
+        optional_int64_field.message_validator,
+        timestamp_field.message_validator,
+        timestamp_fields.message_validator,
+        optional_timestamp_field.message_validator,
 
-        [oo.message_validator],
+        oo.message_validator,
     ]
   end
 end
