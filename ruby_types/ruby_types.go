@@ -115,6 +115,10 @@ func OneOfValidator(oneOf pgs.OneOf) string {
 }
 
 func RubyMessageType(entity EntityWithParent) string {
+	return fmt.Sprintf("%s::%s", RubyPackage(entity.File()), RubyMessageTypeWithoutNamespace(entity))
+}
+
+func RubyMessageTypeWithoutNamespace(entity EntityWithParent) string {
 	names := make([]string, 0)
 	outer := entity
 	ok := true
@@ -123,7 +127,7 @@ func RubyMessageType(entity EntityWithParent) string {
 		names = append([]string{name.String()}, names...)
 		outer, ok = outer.Parent().(pgs.Message)
 	}
-	return fmt.Sprintf("%s::%s", RubyPackage(entity.File()), strings.Join(names, "::"))
+	return strings.Join(names, "::")
 }
 
 func RubyGetterFieldType(field pgs.Field) string {
