@@ -1,3 +1,5 @@
+syntax = "proto3";
+
 /*
 The output from generators of this need to be fed back into the generators.
 
@@ -44,9 +46,14 @@ extend google.protobuf.FieldOptions {
   optional string relevant_if_field_true = 50008;
   optional bool not_required = 50009;
   optional string custom_validator = 50010;
+  optional string custom_model_validator = 50011;
 
   // comma separated list of set names to belong to
   // only affects frontend code geeration.
   // This makes page validation easier
-  optional string field_sets = 50011;
+  optional string field_sets = 50012;
+
+
+  // id of the translation to use as the label
+  optional string translation = 50013;
 }

@@ -61,8 +61,8 @@ func (m *rbiModule) InitContext(c pgs.BuildContext) {
 		"optional":                     m.optional,
 		"optionalOneOf":                m.optionalOneOf,
 		"willGenerateInvalidRuby":      m.willGenerateInvalidRuby,
-		"validators":                   ruby_types.Validators,
-		"oneOfValidators":              ruby_types.OneOfValidators,
+		"validator":                    ruby_types.Validator,
+		"oneOfValidator":               ruby_types.OneOfValidator,
 		"oneOfTranslation":             ruby_types.OneOfTranslation,
 		"translation":                  ruby_types.Translation,
 		"rubyPackage":                  ruby_types.RubyPackage,
@@ -444,41 +444,36 @@ class {{ rubyMessageType . }}Validators
   sig {
     returns ValidatableField[{{ rubyMessageType $message }}, T.nilable(String)]
   }
-  def {{ .Name.LowerSnakeCase }}
+  def self.{{ .Name.LowerSnakeCase }}
     ValidatableField.new(
-      translation: "{{ translation . }}",
+      translation: {{ translation . }},
       getter: ->(message) { message.{{ .Name }} },
       setter: ->(message, field) { message.{{ .Name }} = field },
-      validators: [
-        {{ range validators . }}{{ . }},
-        {{ end }}
-      ]
+      validator: {{ validator . }},
     )
   end
 {{ end }}{{ end }}{{ range .OneOfs }}{{ if not (optionalOneOf .) }}
   sig {
     returns ValidatableField[{{ rubyMessageType $message }}, T.nilable(String)]
   }
-  def {{ .Name.LowerSnakeCase }}
+  def self.{{ .Name.LowerSnakeCase }}
     ValidatableField.new(
-      translation: "{{ oneOfTranslation . }}",
+      translation: {{ oneOfTranslation . }},
       getter: ->(message) { message.{{ .Name.LowerSnakeCase }} },
       setter: ->(message, field) { message.{{ .Name.LowerSnakeCase }} = field },
-      validators: [
-        {{ range oneOfValidators . }}{{ . }},
-        {{ end }}]
+      validator: {{ oneOfValidator . }},
     )
   end
 {{ end }}{{ end }}
 
   sig {
-      returns(T::Array[MessageValidator[{{ rubyMessageType $message }}]])
+      returns(T::Array[Validator[{{ rubyMessageType $message }}]])
   }
-  def all_model_validators
+  def self.all_validators
     [{{ range .Fields }}{{ if not (.InRealOneOf) }}
-        {{ .Name.LowerSnakeCase }}.message_validator,{{ end }}{{ end }}
+        {{ .Name.LowerSnakeCase }}.validator,{{ end }}{{ end }}
 {{ range .OneOfs }}{{ if not (optionalOneOf .) }}
-        {{ .Name.LowerSnakeCase }}.message_validator,{{ end }}{{ end }}
+        {{ .Name.LowerSnakeCase }}.validator,{{ end }}{{ end }}
     ]
   end
 end

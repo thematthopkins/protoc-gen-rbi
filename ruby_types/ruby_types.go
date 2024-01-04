@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/thematthopkins/elm-protobuf/pkg/elm"
+	"github.com/thematthopkins/elm-protobuf/pkg/stringextras"
 	"google.golang.org/protobuf/types/descriptorpb"
 	"log"
 	"strings"
@@ -45,57 +46,72 @@ func RubyPackage(file pgs.File) string {
 	return upperCamelCase(pkg)
 }
 
-func Validators(field pgs.Field) []string {
-	results := []string{}
-	validators := elm.Validators(
+func Validator(field pgs.Field) string {
+	validator := elm.Validators(
 		field.Type().Field().Message().File().Descriptor(),
 		field.Type().Field().Message().Descriptor(),
 		field.Type().Field().Descriptor(),
 		field.Type().Field().Descriptor().GetProto3Optional(),
 	)
 
-	for _, v := range validators {
-		results = append(results, validatorToString(v))
-	}
-	return results
+	return validatorToString(field, field.Name(), validator)
 }
 
-func validatorToString(v elm.Validator) string {
-	validatorName := "Validation::" + ((pgs.Name)(v.Name)).UpperCamelCase().String()
-	if v.FieldArg != "" {
-		return validatorName + ".new( ->(m) { m." + ((pgs.Name)(v.FieldArg)).LowerSnakeCase().String() + "})"
-	} else if v.ValidatorArg != "" {
-		return validatorName + ".new(" + ((pgs.Name)(v.ValidatorArg)).UpperCamelCase().String() + "Validators.new.all_model_validators)"
+func validatorToString(field pgs.Field, fieldName pgs.Name, v elm.Validator) string {
+	result := "Validation::" + stringextras.FirstUpper(v.MessageValidator) + ".new("
+
+	result = result + " " + Translation(field) + ", "
+
+	if v.RequiredIfFieldTrue != nil {
+		result = result + " ( ->(m) { m." + *v.RequiredIfFieldTrue + "} ), "
+	}
+
+	result = result + " ( ->(m) { m." + (string)(fieldName.LowerSnakeCase()) + "} ), "
+
+	result = result + "("
+	if v.FieldValidator != nil {
+		result = result + "[ Validation::" + stringextras.FirstUpper(*v.FieldValidator) + ".new ] + "
+	}
+
+	if v.SubMessageValidator != nil {
+		result = result + stringextras.FirstUpper(*v.SubMessageValidator) + "Validators.all_validators"
 	} else {
-		return validatorName + ".new"
+		result = result + "[]"
 	}
+	result = result + "))"
+
+	if v.ModelValidator != nil {
+		result = "Validation::Batch.new(Validation::" + stringextras.FirstUpper(*v.ModelValidator) + ".new, " + result + ")"
+	}
+
+	return result
 }
 
-func Translation(field pgs.Field) *pgs.Name {
-	return (*pgs.Name)(elm.GetTranslation(field.Type().Field().Descriptor()))
+func Translation(field pgs.Field) string {
+	v := (*pgs.Name)(elm.GetTranslation(field.Type().Field().Descriptor()))
+	if v != nil {
+		return "TranslationId.new(\"" + (string)(v.LowerCamelCase()) + "\")"
+	}
+	return "TranslationId.new(\"<missing translation id>\")"
 }
 
-func OneOfTranslation(oneof pgs.OneOf) *pgs.Name {
+func OneOfTranslation(oneof pgs.OneOf) string {
 	return Translation(oneof.Fields()[0])
 }
 
-func OneOfValidators(oneOf pgs.OneOf) []string {
-	results := []string{}
+func OneOfValidator(oneOf pgs.OneOf) string {
 	fields := []*descriptorpb.FieldDescriptorProto{}
 	for _, v := range oneOf.Fields() {
 		fields = append(fields, v.Descriptor())
 	}
 
-	validators := elm.OneOfValidatorsForFields(
+	validator := elm.OneOfValidatorsForFields(
 		oneOf.Message().File().Descriptor(),
 		oneOf.Message().Descriptor(),
 		fields,
 	)
 
-	for _, v := range validators {
-		results = append(results, validatorToString(v))
-	}
-	return results
+	return validatorToString(oneOf.Fields()[0], oneOf.Name(), validator)
 }
 
 func RubyMessageType(entity EntityWithParent) string {

@@ -17,9 +17,9 @@ class ::EmptyValidators
 
 
   sig {
-      returns(T::Array[MessageValidator[::Empty]])
+      returns(T::Array[Validator[::Empty]])
   }
-  def all_model_validators
+  def self.all_validators
     [
 
     ]
@@ -40,25 +40,22 @@ class ::SimpleValidators
   sig {
     returns ValidatableField[::Simple, T.nilable(String)]
   }
-  def int32_field
+  def self.int32_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.int32_field },
       setter: ->(message, field) { message.int32_field = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.int32_field} ), ([])),
     )
   end
 
 
   sig {
-      returns(T::Array[MessageValidator[::Simple]])
+      returns(T::Array[Validator[::Simple]])
   }
-  def all_model_validators
+  def self.all_validators
     [
-        int32_field.message_validator,
+        int32_field.validator,
 
     ]
   end
@@ -78,312 +75,257 @@ class ::FooValidators
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def required_simple
+  def self.required_simple
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.required_simple },
       setter: ->(message, field) { message.required_simple = field },
-      validators: [
-        Validation::ValidateSubMessage.new(SimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.required_simple} ), (SimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_simple
+  def self.maybe_simple
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_simple },
       setter: ->(message, field) { message.maybe_simple = field },
-      validators: [
-        Validation::Required.new,
-        Validation::ValidateSubMessageIfPresent.new(SimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybe_simple} ), (SimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def not_required_maybe_simple
+  def self.not_required_maybe_simple
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.not_required_maybe_simple },
       setter: ->(message, field) { message.not_required_maybe_simple = field },
-      validators: [
-        Validation::ValidateSubMessageIfPresent.new(SimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::Optional.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.not_required_maybe_simple} ), (SimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def required_nested_simple
+  def self.required_nested_simple
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.required_nested_simple },
       setter: ->(message, field) { message.required_nested_simple = field },
-      validators: [
-        Validation::ValidateSubMessage.new(FooNestedSimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.required_nested_simple} ), (Foo_NestedSimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_nested_simple
+  def self.maybe_nested_simple
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_nested_simple },
       setter: ->(message, field) { message.maybe_nested_simple = field },
-      validators: [
-        Validation::Required.new,
-        Validation::ValidateSubMessageIfPresent.new(FooNestedSimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybe_nested_simple} ), (Foo_NestedSimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def not_required_maybe_nested_simple
+  def self.not_required_maybe_nested_simple
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.not_required_maybe_nested_simple },
       setter: ->(message, field) { message.not_required_maybe_nested_simple = field },
-      validators: [
-        Validation::ValidateSubMessageIfPresent.new(FooNestedSimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::Optional.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.not_required_maybe_nested_simple} ), (Foo_NestedSimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def required_int
+  def self.required_int
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.required_int },
       setter: ->(message, field) { message.required_int = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.required_int} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_int
+  def self.maybe_int
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_int },
       setter: ->(message, field) { message.maybe_int = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybe_int} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def not_required_maybe_int
+  def self.not_required_maybe_int
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.not_required_maybe_int },
       setter: ->(message, field) { message.not_required_maybe_int = field },
-      validators: [
-        
-      ]
+      validator: Validation::Optional.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.not_required_maybe_int} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def required_bool
+  def self.required_bool
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.required_bool },
       setter: ->(message, field) { message.required_bool = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.required_bool} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_bool
+  def self.maybe_bool
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_bool },
       setter: ->(message, field) { message.maybe_bool = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybe_bool} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def required_enum
+  def self.required_enum
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.required_enum },
       setter: ->(message, field) { message.required_enum = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.required_enum} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_enum
+  def self.maybe_enum
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_enum },
       setter: ->(message, field) { message.maybe_enum = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybe_enum} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_string_relevant_if_required_bool
+  def self.maybe_string_relevant_if_required_bool
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_string_relevant_if_required_bool },
       setter: ->(message, field) { message.maybe_string_relevant_if_required_bool = field },
-      validators: [
-        Validation::RelevantIfFieldTrue.new( ->(m) { m.required_bool}),
-        
-      ]
+      validator: Validation::RequiredIfFieldTrue.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.requiredBool} ),  ( ->(m) { m.maybe_string_relevant_if_required_bool} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_string_relevant_if_maybe_bool
+  def self.maybe_string_relevant_if_maybe_bool
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_string_relevant_if_maybe_bool },
       setter: ->(message, field) { message.maybe_string_relevant_if_maybe_bool = field },
-      validators: [
-        Validation::RelevantIfMaybeFieldTrue.new( ->(m) { m.maybe_bool}),
-        
-      ]
+      validator: Validation::RequiredIfMaybeFieldTrue.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybeBool} ),  ( ->(m) { m.maybe_string_relevant_if_maybe_bool} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def required_string_with_custom_validator
+  def self.required_string_with_custom_validator
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.required_string_with_custom_validator },
       setter: ->(message, field) { message.required_string_with_custom_validator = field },
-      validators: [
-        Validation::RequiredStringCustomValidator.new,
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.required_string_with_custom_validator} ), ([ Validation::RequiredStringCustomValidator.new ] + [])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def maybe_string_with_custom_validator
+  def self.maybe_string_with_custom_validator
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.maybe_string_with_custom_validator },
       setter: ->(message, field) { message.maybe_string_with_custom_validator = field },
-      validators: [
-        Validation::Required.new,
-        Validation::RequiredMaybeStringCustomValidator.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybe_string_with_custom_validator} ), ([ Validation::RequiredMaybeStringCustomValidator.new ] + [])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def repeated_string_custom_validator
+  def self.repeated_string_custom_validator
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.repeated_string_custom_validator },
       setter: ->(message, field) { message.repeated_string_custom_validator = field },
-      validators: [
-        Validation::RepeatedStringCustomValidator.new,
-        
-      ]
+      validator: Validation::RequiredList.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.repeated_string_custom_validator} ), ([ Validation::RepeatedStringCustomValidator.new ] + [])),
     )
   end
 
   sig {
     returns ValidatableField[::Foo, T.nilable(String)]
   }
-  def oneof
+  def self.oneof
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.oneof },
       setter: ->(message, field) { message.oneof = field },
-      validators: [
-        Validation::OneofFieldValidator.new,
-        ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.oneof} ), ([ Validation::OneofFieldValidator.new ] + [])),
     )
   end
 
 
   sig {
-      returns(T::Array[MessageValidator[::Foo]])
+      returns(T::Array[Validator[::Foo]])
   }
-  def all_model_validators
+  def self.all_validators
     [
-        required_simple.message_validator,
-        maybe_simple.message_validator,
-        not_required_maybe_simple.message_validator,
-        required_nested_simple.message_validator,
-        maybe_nested_simple.message_validator,
-        not_required_maybe_nested_simple.message_validator,
-        required_int.message_validator,
-        maybe_int.message_validator,
-        not_required_maybe_int.message_validator,
-        required_bool.message_validator,
-        maybe_bool.message_validator,
-        required_enum.message_validator,
-        maybe_enum.message_validator,
-        maybe_string_relevant_if_required_bool.message_validator,
-        maybe_string_relevant_if_maybe_bool.message_validator,
-        required_string_with_custom_validator.message_validator,
-        maybe_string_with_custom_validator.message_validator,
-        repeated_string_custom_validator.message_validator,
+        required_simple.validator,
+        maybe_simple.validator,
+        not_required_maybe_simple.validator,
+        required_nested_simple.validator,
+        maybe_nested_simple.validator,
+        not_required_maybe_nested_simple.validator,
+        required_int.validator,
+        maybe_int.validator,
+        not_required_maybe_int.validator,
+        required_bool.validator,
+        maybe_bool.validator,
+        required_enum.validator,
+        maybe_enum.validator,
+        maybe_string_relevant_if_required_bool.validator,
+        maybe_string_relevant_if_maybe_bool.validator,
+        required_string_with_custom_validator.validator,
+        maybe_string_with_custom_validator.validator,
+        repeated_string_custom_validator.validator,
 
-        oneof.message_validator,
+        oneof.validator,
     ]
   end
 end
@@ -402,25 +344,22 @@ class ::Foo::NestedSimpleValidators
   sig {
     returns ValidatableField[::Foo::NestedSimple, T.nilable(String)]
   }
-  def optional_nested_int
+  def self.optional_nested_int
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.optional_nested_int },
       setter: ->(message, field) { message.optional_nested_int = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.optional_nested_int} ), ([])),
     )
   end
 
 
   sig {
-      returns(T::Array[MessageValidator[::Foo::NestedSimple]])
+      returns(T::Array[Validator[::Foo::NestedSimple]])
   }
-  def all_model_validators
+  def self.all_validators
     [
-        optional_nested_int.message_validator,
+        optional_nested_int.validator,
 
     ]
   end

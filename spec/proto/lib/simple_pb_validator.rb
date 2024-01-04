@@ -17,9 +17,9 @@ class SimplePb::EmptyValidators
 
 
   sig {
-      returns(T::Array[MessageValidator[SimplePb::Empty]])
+      returns(T::Array[Validator[SimplePb::Empty]])
   }
-  def all_model_validators
+  def self.all_validators
     [
 
     ]
@@ -40,24 +40,22 @@ class SimplePb::SimpleValidators
   sig {
     returns ValidatableField[SimplePb::Simple, T.nilable(String)]
   }
-  def int32_field
+  def self.int32_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.int32_field },
       setter: ->(message, field) { message.int32_field = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.int32_field} ), ([])),
     )
   end
 
 
   sig {
-      returns(T::Array[MessageValidator[SimplePb::Simple]])
+      returns(T::Array[Validator[SimplePb::Simple]])
   }
-  def all_model_validators
+  def self.all_validators
     [
-        int32_field.message_validator,
+        int32_field.validator,
 
     ]
   end
@@ -77,257 +75,218 @@ class SimplePb::FooValidators
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def s
+  def self.s
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.s },
       setter: ->(message, field) { message.s = field },
-      validators: [
-        Validation::ValidateSubMessage.new(SimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.s} ), (SimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def ss
+  def self.ss
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.ss },
       setter: ->(message, field) { message.ss = field },
-      validators: [
-        Validation::ValidateSubMessageList.new(SimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::RequiredList.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.ss} ), (SimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def optional_s
+  def self.optional_s
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.optional_s },
       setter: ->(message, field) { message.optional_s = field },
-      validators: [
-        Validation::Required.new,
-        Validation::ValidateSubMessageIfPresent.new(SimpleValidators.new.all_model_validators),
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.optional_s} ), (SimpleValidators.all_validators)),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def colour
+  def self.colour
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.colour },
       setter: ->(message, field) { message.colour = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.colour} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def colours
+  def self.colours
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.colours },
       setter: ->(message, field) { message.colours = field },
-      validators: [
-        
-      ]
+      validator: Validation::RequiredList.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.colours} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def optional_colour
+  def self.optional_colour
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.optional_colour },
       setter: ->(message, field) { message.optional_colour = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.optional_colour} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def int_field
+  def self.int_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.int_field },
       setter: ->(message, field) { message.int_field = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.int_field} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def int_fields
+  def self.int_fields
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.int_fields },
       setter: ->(message, field) { message.int_fields = field },
-      validators: [
-        
-      ]
+      validator: Validation::RequiredList.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.int_fields} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def optional_int_field
+  def self.optional_int_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.optional_int_field },
       setter: ->(message, field) { message.optional_int_field = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.optional_int_field} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def int64_field
+  def self.int64_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.int64_field },
       setter: ->(message, field) { message.int64_field = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.int64_field} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def int64_fields
+  def self.int64_fields
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.int64_fields },
       setter: ->(message, field) { message.int64_fields = field },
-      validators: [
-        
-      ]
+      validator: Validation::RequiredList.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.int64_fields} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def optional_int64_field
+  def self.optional_int64_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.optional_int64_field },
       setter: ->(message, field) { message.optional_int64_field = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.optional_int64_field} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def timestamp_field
+  def self.timestamp_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.timestamp_field },
       setter: ->(message, field) { message.timestamp_field = field },
-      validators: [
-        
-      ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.timestamp_field} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def timestamp_fields
+  def self.timestamp_fields
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.timestamp_fields },
       setter: ->(message, field) { message.timestamp_fields = field },
-      validators: [
-        
-      ]
+      validator: Validation::RequiredList.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.timestamp_fields} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def optional_timestamp_field
+  def self.optional_timestamp_field
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.optional_timestamp_field },
       setter: ->(message, field) { message.optional_timestamp_field = field },
-      validators: [
-        Validation::Required.new,
-        
-      ]
+      validator: Validation::Required.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.optional_timestamp_field} ), ([])),
     )
   end
 
   sig {
     returns ValidatableField[SimplePb::Foo, T.nilable(String)]
   }
-  def oo
+  def self.oo
     ValidatableField.new(
-      translation: "<nil>",
+      translation: TranslationId.new("<missing translation id>"),
       getter: ->(message) { message.oo },
       setter: ->(message, field) { message.oo = field },
-      validators: [
-        ]
+      validator: Validation::AlwaysPresent.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.oo} ), ([])),
     )
   end
 
 
   sig {
-      returns(T::Array[MessageValidator[SimplePb::Foo]])
+      returns(T::Array[Validator[SimplePb::Foo]])
   }
-  def all_model_validators
+  def self.all_validators
     [
-        s.message_validator,
-        ss.message_validator,
-        optional_s.message_validator,
-        colour.message_validator,
-        colours.message_validator,
-        optional_colour.message_validator,
-        int_field.message_validator,
-        int_fields.message_validator,
-        optional_int_field.message_validator,
-        int64_field.message_validator,
-        int64_fields.message_validator,
-        optional_int64_field.message_validator,
-        timestamp_field.message_validator,
-        timestamp_fields.message_validator,
-        optional_timestamp_field.message_validator,
+        s.validator,
+        ss.validator,
+        optional_s.validator,
+        colour.validator,
+        colours.validator,
+        optional_colour.validator,
+        int_field.validator,
+        int_fields.validator,
+        optional_int_field.validator,
+        int64_field.validator,
+        int64_fields.validator,
+        optional_int64_field.validator,
+        timestamp_field.validator,
+        timestamp_fields.validator,
+        optional_timestamp_field.validator,
 
-        oo.message_validator,
+        oo.validator,
     ]
   end
 end
