@@ -156,9 +156,7 @@ class ::Foo < T::Struct
 
   const :maybe_enum, T.nilable(::Colour)
 
-  const :maybe_string_relevant_if_required_bool, T.nilable(String)
-
-  const :maybe_string_relevant_if_maybe_bool, T.nilable(String)
+  const :maybe_string_relevant_if, T.nilable(String)
 
   const :required_string_with_custom_validator, String
 
@@ -271,8 +269,7 @@ class ::Foo < T::Struct
       "maybeBool": maybe_bool,
       "requiredEnum": required_enum.serialize,
       "maybeEnum": maybe_enum&.serialize,
-      "maybeStringRelevantIfRequiredBool": maybe_string_relevant_if_required_bool,
-      "maybeStringRelevantIfMaybeBool": maybe_string_relevant_if_maybe_bool,
+      "maybeStringRelevantIf": maybe_string_relevant_if,
       "requiredStringWithCustomValidator": required_string_with_custom_validator,
       "maybeStringWithCustomValidator": maybe_string_with_custom_validator,
       "repeatedStringCustomValidator": repeated_string_custom_validator,
@@ -303,8 +300,7 @@ class ::Foo < T::Struct
       maybe_bool: PbHelper::mapNil(hash["maybeBool"]) { (hash["maybeBool"]) },
       required_enum: ::Colour.deserialize(PbHelper::withDefault(hash["requiredEnum"], "RED")),
       maybe_enum: PbHelper::mapNil(hash["maybeEnum"]) { ::Colour.deserialize(hash["maybeEnum"]) },
-      maybe_string_relevant_if_required_bool: PbHelper::mapNil(hash["maybeStringRelevantIfRequiredBool"]) { (hash["maybeStringRelevantIfRequiredBool"]) },
-      maybe_string_relevant_if_maybe_bool: PbHelper::mapNil(hash["maybeStringRelevantIfMaybeBool"]) { (hash["maybeStringRelevantIfMaybeBool"]) },
+      maybe_string_relevant_if: PbHelper::mapNil(hash["maybeStringRelevantIf"]) { (hash["maybeStringRelevantIf"]) },
       required_string_with_custom_validator: (PbHelper::withDefault(hash["requiredStringWithCustomValidator"], "")),
       maybe_string_with_custom_validator: PbHelper::mapNil(hash["maybeStringWithCustomValidator"]) { (hash["maybeStringWithCustomValidator"]) },
       repeated_string_custom_validator: PbHelper::withDefault(hash["repeatedStringCustomValidator"], []).map{(_1)},

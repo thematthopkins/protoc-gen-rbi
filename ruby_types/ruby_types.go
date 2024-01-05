@@ -2,12 +2,13 @@ package ruby_types
 
 import (
 	"fmt"
+	"log"
+	"strings"
+
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 	"github.com/thematthopkins/elm-protobuf/pkg/elm"
 	"github.com/thematthopkins/elm-protobuf/pkg/stringextras"
 	"google.golang.org/protobuf/types/descriptorpb"
-	"log"
-	"strings"
 
 	pgs "github.com/lyft/protoc-gen-star"
 )
@@ -62,8 +63,8 @@ func validatorToString(field pgs.Field, fieldName pgs.Name, v elm.Validator) str
 
 	result = result + " " + Translation(field) + ", "
 
-	if v.RequiredIfFieldTrue != nil {
-		result = result + " ( ->(m) { m." + *v.RequiredIfFieldTrue + "} ), "
+	if v.RequiredIf != nil {
+		result = result + " ( ->(m) { Condition::" + *v.RequiredIf + "(m) } ), "
 	}
 
 	result = result + " ( ->(m) { m." + (string)(fieldName.LowerSnakeCase()) + "} ), "

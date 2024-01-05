@@ -49,9 +49,7 @@ message Foo {
     int32 int_field = 15[(custom_validator) = "oneofFieldValidator"];
   }
 
-
-  optional string maybe_string_relevant_if_required_bool = 16 [(relevant_if_field_true) = "required_bool"];
-  optional string maybe_string_relevant_if_maybe_bool = 17 [(relevant_if_field_true) = "maybe_bool"];
+  optional string maybe_string_relevant_if = 16 [(required_if) = "requiredBool"];
 
   string required_string_with_custom_validator = 18 [(custom_validator) = "requiredStringCustomValidator"];
   optional string maybe_string_with_custom_validator = 19 [(custom_validator) = "requiredMaybeStringCustomValidator"];

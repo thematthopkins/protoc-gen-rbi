@@ -38,4 +38,4 @@ else
         --experimental_allow_proto3_optional
 fi
 
-rspec
+bundle exec rspec
