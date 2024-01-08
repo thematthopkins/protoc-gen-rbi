@@ -237,7 +237,7 @@ module Validator
           translation: TranslationId.new("<missing translation id>"),
           getter: ->(message) { message.maybe_string_relevant_if },
           setter: ->(message, field) { message.maybe_string_relevant_if = field },
-          validator: Validation::RequiredIf.new( TranslationId.new("<missing translation id>"),  ( ->(m) { Condition::requiredBool(m) } ),  ( ->(m) { m.maybe_string_relevant_if} ), ([])),
+          validator: Validation::RequiredIf.new( TranslationId.new("<missing translation id>"),  ( ->(m) { Validation::Condition::requiredBool(m) } ),  ( ->(m) { m.maybe_string_relevant_if} ), ([])),
         )
       end
     

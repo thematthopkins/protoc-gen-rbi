@@ -64,7 +64,7 @@ func validatorToString(field pgs.Field, fieldName pgs.Name, v elm.Validator) str
 	result = result + " " + Translation(field) + ", "
 
 	if v.RequiredIf != nil {
-		result = result + " ( ->(m) { Condition::" + *v.RequiredIf + "(m) } ), "
+		result = result + " ( ->(m) { Validation::Condition::" + *v.RequiredIf + "(m) } ), "
 	}
 
 	result = result + " ( ->(m) { m." + (string)(fieldName.LowerSnakeCase()) + "} ), "
