@@ -1435,6 +1435,8 @@ github.com/thematthopkins/elm-protobuf v0.0.5-0.20240102200346-e2acfe62fccc h1:c
 github.com/thematthopkins/elm-protobuf v0.0.5-0.20240102200346-e2acfe62fccc/go.mod h1:T3WO18KS4HvOnjRvu3r1njnVBKicSV7udKC8QFwFPoE=
 github.com/thematthopkins/elm-protobuf v0.0.5-0.20240103143543-e05b123c0a31 h1:sroL3b6ROSHWj2w5v28JC6UlxftNr1fGc3hqYcyrBdI=
 github.com/thematthopkins/elm-protobuf v0.0.5-0.20240103143543-e05b123c0a31/go.mod h1:T3WO18KS4HvOnjRvu3r1njnVBKicSV7udKC8QFwFPoE=
+github.com/thematthopkins/elm-protobuf v0.0.5-0.20240105180410-7bd196dade28 h1:ipqy9RPsEsCn/ynJ0fN1jdACuHXxg9/oMk4d0mR2ZdQ=
+github.com/thematthopkins/elm-protobuf v0.0.5-0.20240105180410-7bd196dade28/go.mod h1:T3WO18KS4HvOnjRvu3r1njnVBKicSV7udKC8QFwFPoE=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

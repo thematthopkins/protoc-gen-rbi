@@ -232,24 +232,12 @@ module Validator
       sig {
         returns ValidatableField[::Foo, T.nilable(String)]
       }
-      def self.maybe_string_relevant_if_required_bool
+      def self.maybe_string_relevant_if
         ValidatableField.new(
           translation: TranslationId.new("<missing translation id>"),
-          getter: ->(message) { message.maybe_string_relevant_if_required_bool },
-          setter: ->(message, field) { message.maybe_string_relevant_if_required_bool = field },
-          validator: Validation::RequiredIfFieldTrue.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.requiredBool} ),  ( ->(m) { m.maybe_string_relevant_if_required_bool} ), ([])),
-        )
-      end
-    
-      sig {
-        returns ValidatableField[::Foo, T.nilable(String)]
-      }
-      def self.maybe_string_relevant_if_maybe_bool
-        ValidatableField.new(
-          translation: TranslationId.new("<missing translation id>"),
-          getter: ->(message) { message.maybe_string_relevant_if_maybe_bool },
-          setter: ->(message, field) { message.maybe_string_relevant_if_maybe_bool = field },
-          validator: Validation::RequiredIfMaybeFieldTrue.new( TranslationId.new("<missing translation id>"),  ( ->(m) { m.maybeBool} ),  ( ->(m) { m.maybe_string_relevant_if_maybe_bool} ), ([])),
+          getter: ->(message) { message.maybe_string_relevant_if },
+          setter: ->(message, field) { message.maybe_string_relevant_if = field },
+          validator: Validation::RequiredIf.new( TranslationId.new("<missing translation id>"),  ( ->(m) { Validation::Condition::requiredBool(m) } ),  ( ->(m) { m.maybe_string_relevant_if} ), ([])),
         )
       end
     
@@ -320,8 +308,7 @@ module Validator
             maybe_bool.validator,
             required_enum.validator,
             maybe_enum.validator,
-            maybe_string_relevant_if_required_bool.validator,
-            maybe_string_relevant_if_maybe_bool.validator,
+            maybe_string_relevant_if.validator,
             required_string_with_custom_validator.validator,
             maybe_string_with_custom_validator.validator,
             repeated_string_custom_validator.validator,

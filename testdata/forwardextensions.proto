@@ -43,7 +43,7 @@ extend google.protobuf.FileOptions {
 }
 
 extend google.protobuf.FieldOptions {
-  optional string relevant_if_field_true = 50008;
+  optional string required_if = 50008;
   optional bool not_required = 50009;
   optional string custom_validator = 50010;
   optional string custom_model_validator = 50011;
